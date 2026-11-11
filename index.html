@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<meta name="description" content="Интернет-магазин одежды">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E🛍%3C/text%3E%3C/svg%3E">
+<title>Мой магазин</title>
+<style>
+:root{--bg:#fff;--fg:#1a1a1a;--card:#f4f4f5;--mut:#777;--bd:#e2e2e4;--acc:#111;color-scheme:light;box-sizing:border-box;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151517;--fg:#f1f1f1;--card:#222226;--mut:#9a9aa0;--bd:#34343a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#151517;--fg:#f1f1f1;--card:#222226;--mut:#9a9aa0;--bd:#34343a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+img{max-width:100%}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg);border-bottom:1px solid var(--bd)}
+header h1{flex:1;margin:0;font-size:17px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--card);color:var(--fg);border-radius:10px;padding:10px 14px;min-height:44px;touch-action:manipulation}
+header button{flex:none;padding:8px 12px}
+button.p{background:var(--acc);color:#fff;border-color:var(--acc)}
+button.d{color:#d33}
+button:disabled{opacity:.5}
+main{max-width:960px;margin:0 auto;padding:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.c{background:var(--card);border-radius:14px;overflow:hidden;cursor:pointer;position:relative;min-width:0}
+.c .im,.big{aspect-ratio:3/4;background:linear-gradient(135deg,var(--bd),var(--card));display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:13px}
+.im img,.big img{width:100%;height:100%;object-fit:cover}
+.c .t{padding:10px}.c b{display:block;overflow-wrap:anywhere;margin-bottom:4px}
+.pr{display:inline-block;background:var(--acc);color:#fff;font-weight:700;border-radius:8px;padding:2px 9px}
+.sold{position:absolute;top:8px;left:8px;background:#000a;color:#fff;border-radius:8px;padding:2px 8px;font-size:12px}
+.ov{position:fixed;inset:0;background:#0008;z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.md{background:var(--bg);width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:18px 18px 0 0;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.sz{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.sz button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.th{display:flex;gap:6px;margin:8px 0;overflow-x:auto}
+.th img{width:54px;height:54px;flex:none;object-fit:cover;border-radius:8px;cursor:pointer}
+input,textarea,select{font:inherit;font-size:16px;width:100%;padding:10px 12px;margin:4px 0 10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--fg)}
+label{font-size:13px;color:var(--mut)}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1;min-width:0}
+.box{background:var(--card);border-radius:12px;padding:12px;margin:10px 0}
+.tabs{display:flex;gap:8px;margin-bottom:14px}.tabs button{flex:1}.tabs .on{background:var(--acc);color:#fff}
+.x{display:inline-block;position:relative;margin:0 6px 6px 0}.x button{position:absolute;top:2px;right:2px;padding:0 7px;min-height:26px;border-radius:50%}
+.warn{background:#f5a62333;border:1px solid #f5a623;border-radius:10px;padding:10px;margin-bottom:12px;font-size:14px}
+.ok{background:#2e9e5b22;border:1px solid #2e9e5b;border-radius:10px;padding:10px;margin-bottom:12px;font-size:14px}
+.card{font-size:20px;letter-spacing:1px;font-weight:700;margin:6px 0;overflow-wrap:anywhere}
+footer{text-align:center;padding:24px 0 8px;font-size:12px}
+footer a{color:var(--mut);cursor:pointer;text-decoration:underline}
+#st{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));background:#222;color:#fff;border-radius:20px;padding:7px 16px;font-size:13px;z-index:50;display:none;max-width:90vw;text-align:center}
+#st.err{background:#c0392b}
+ol{padding-left:20px;margin:6px 0}
+code{overflow-wrap:anywhere}
+noscript{display:block;padding:20px;text-align:center}
+
+/* ---- планшет ---- */
+@media(min-width:600px){
+ header{padding:10px 18px}header h1{font-size:19px}
+ main{padding:18px}
+ .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+}
+@media(min-width:700px){.ov{align-items:center}.md{border-radius:18px}}
+/* ---- десктоп ---- */
+@media(min-width:900px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(hover:hover){button:not(:disabled):hover{filter:brightness(.96)}.c:hover{box-shadow:0 2px 12px #0002}}
+</style></head><body><noscript>Для работы магазина включите JavaScript.</noscript><div id="app"></div><div id="st"></div>
+<script>
+/* ===== ПОДКЛЮЧЕНИЕ К ОБЛАКУ (адрес базы Firebase). Заполняется в админке кнопкой «Скачать файл с подключением» ===== */
+const DB_URL='';
+const NS='shop@'+location.pathname.replace(/index\.html$/,'')+'|';
+
+const SRC='<!DOCTYPE html>'+document.documentElement.outerHTML;
+const SALT='shop|';
+const DEF_HASH='8c51d3f27c18380f8624ea62047f480c8419a05dae3c146232e56bb8a4f5ca23';
+
+/* ---------- SHA-256 (работает и без https) ---------- */
+function sha256(s){s=unescape(encodeURIComponent(s));
+ function rr(v,a){return(v>>>a)|(v<<(32-a))}
+ var mp=Math.pow,mw=mp(2,32),i,j,result='',words=[],al=s.length*8;
+ var hash=sha256.h=sha256.h||[],k=sha256.k=sha256.k||[],pc=k.length,ic={};
+ for(var cand=2;pc<64;cand++){if(!ic[cand]){for(i=0;i<313;i+=cand)ic[i]=cand;hash[pc]=(mp(cand,.5)*mw)|0;k[pc++]=(mp(cand,1/3)*mw)|0}}
+ s+='\x80';while(s.length%64-56)s+='\x00';
+ for(i=0;i<s.length;i++){j=s.charCodeAt(i);words[i>>2]|=j<<((3-i)%4)*8}
+ words[words.length]=((al/mw)|0);words[words.length]=al;
+ for(j=0;j<words.length;){var w=words.slice(j,j+=16),oh=hash;hash=hash.slice(0,8);
+  for(i=0;i<64;i++){var w15=w[i-15],w2=w[i-2],a=hash[0],e=hash[4];
+   var t1=hash[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&hash[5])^((~e)&hash[6]))+k[i]+(w[i]=(i<16)?w[i]:(w[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+w[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
+   var t2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+   hash=[(t1+t2)|0].concat(hash);hash[4]=(hash[4]+t1)|0}
+  for(i=0;i<8;i++)hash[i]=(hash[i]+oh[i])|0}
+ for(i=0;i<8;i++)for(j=3;j+1;j--){var b=(hash[i]>>(j*8))&255;result+=((b<16)?0:'')+b.toString(16)}
+ return result}
+const hp=pw=>sha256(SALT+pw);
+
+/* ---------- данные ---------- */
+const DEF=()=>({s:{name:'Мой магазин',color:'#111111',tg:'',card:'',holder:'',cur:'₴',about:'Одежда с доставкой по Украине'},
+ p:[{id:'demo',t:0,n:'Худи оверсайз',pr:900,d:'Плотный флис, свободный крой. Это пример товара: удалите или измените его в админке.',sz:['S','M','L','XL'],im:[],sold:false}]});
+let D=DEF();
+let cart=[],modal=null,admin=false,tab='p',loggedIn=false;
+const app=document.getElementById('app');
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>(+n||0).toLocaleString('ru-RU')+' '+esc(D.s.cur);
+const total=()=>cart.reduce((a,i)=>a+i.pr*i.q,0);
+const prod=id=>D.p.find(p=>p.id===id);
+const curHash=()=>D.s.ph||DEF_HASH;
+const LS={get(k){try{return localStorage.getItem(NS+k)}catch(e){return null}},set(k,v){try{localStorage.setItem(NS+k,v)}catch(e){}},del(k){try{localStorage.removeItem(NS+k)}catch(e){}}};
+const base=()=>(DB_URL||LS.get('dburl')||'').trim().replace(/\/+$/,'');
+function norm(x){const d=DEF(),s=Object.assign(d.s,x&&x.s||{});
+ let p=x&&x.p?(Array.isArray(x.p)?x.p:Object.values(x.p)):[];
+ p=p.filter(Boolean).map(q=>({id:q.id,t:q.t||0,n:q.n||'',pr:+q.pr||0,d:q.d||'',sz:q.sz?(Array.isArray(q.sz)?q.sz:Object.values(q.sz)):[],im:q.im?(Array.isArray(q.im)?q.im:Object.values(q.im)):[],sold:!!q.sold}));
+ p.sort((a,b)=>b.t-a.t);return{s,p}}
+
+/* ---------- локальное хранилище (IndexedDB, без лимита 5 МБ) ---------- */
+const idb=()=>new Promise((res,rej)=>{try{const r=indexedDB.open(NS,1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}});
+async function idbGet(){try{const d=await idb();return await new Promise(res=>{const q=d.transaction('k').objectStore('k').get('D');q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}catch(e){return null}}
+async function idbSet(v){try{const d=await idb();return await new Promise(res=>{const t=d.transaction('k','readwrite');t.objectStore('k').put(v,'D');t.oncomplete=()=>res();t.onerror=()=>res()})}catch(e){}}
+
+/* ---------- облако (Firebase Realtime Database через обычный fetch) ---------- */
+let stT;
+function status(t,err){const e=document.getElementById('st');if(!e)return;e.textContent=t;e.className=err?'err':'';e.style.display='block';clearTimeout(stT);stT=setTimeout(()=>e.style.display='none',err?6000:2200)}
+async function cput(path,val){const r=await fetch(base()+path+'.json',{method:'PUT',body:JSON.stringify(val)});if(!r.ok)throw new Error(r.status)}
+async function cloudLoad(){const r=await fetch(base()+'/shop.json');if(!r.ok)throw new Error(r.status);return r.json()}
+let dS=false,dP=new Set(),dDel=new Set(),tm;
+function mark(kind,id){theme();if(kind==='s')dS=true;else if(kind==='p')dP.add(id);else if(kind==='del'){dP.delete(id);dDel.add(id)}
+ LS.set('pending','1');status('Сохранение…');clearTimeout(tm);tm=setTimeout(flush,600)}
+function markAll(){dS=true;D.p.forEach(p=>dP.add(p.id));LS.set('pending','1')}
+async function flush(){
+ await idbSet(D);
+ if(!base()){LS.del('pending');status('Сохранено на этом устройстве');return}
+ try{
+  if(dS){await cput('/shop/s',D.s);dS=false}
+  for(const id of [...dP]){const p=prod(id);if(p)await cput('/shop/p/'+id,p);dP.delete(id)}
+  for(const id of [...dDel]){await fetch(base()+'/shop/p/'+id+'.json',{method:'DELETE'});dDel.delete(id)}
+  LS.del('pending');status('Сохранено ✓')
+ }catch(e){status('Не удалось сохранить в облако. Проверьте интернет и настройки базы',1)}}
+
+/* ---------- вход ---------- */
+const checkLogin=()=>{loggedIn=LS.get('adm')===curHash()};
+async function init(){
+ const l=await idbGet();if(l)D=norm(l);
+ checkLogin();admin=loggedIn;render();
+ if(location.hash==='#admin'&&!loggedIn){modal={t:'login'};render()}
+ if(base()){
+  try{const c=await cloudLoad();
+   if(c&&c.s){
+    if(LS.get('pending')==='1'&&LS.get('adm')){markAll();flush()}   // были несохранённые правки владельца
+    else{D=norm(c);idbSet(D)}
+   }else if(LS.get('adm')){markAll();flush()}                        // облако пустое: заливаем данные
+   checkLogin();if(!loggedIn)admin=false;render();
+  }catch(e){}
+ }}
+async function login(){const v=document.getElementById('lp').value;
+ if(hp(v)===curHash()){LS.set('adm',curHash());loggedIn=true;admin=true;modal=null;history.replaceState(null,'',location.pathname+location.search);render()}
+ else{status('Неверный пароль',1)}}
+function logout(){LS.del('adm');loggedIn=false;admin=false;render()}
+
+/* ---------- вид ---------- */
+function theme(){document.documentElement.style.setProperty('--acc',D.s.color);document.title=D.s.name;const m=document.querySelector('meta[name=theme-color]');if(m)m.content=D.s.color}
+function render(){theme();document.body.style.overflow=modal?'hidden':'';
+ app.innerHTML=`<header><h1>${esc(D.s.name)}</h1>${loggedIn?`<button onclick="admin=!admin;render()">${admin?'Магазин':'⚙ Админ'}</button>`:''}<button onclick="modal={t:'cart'};render()">🛒 ${cart.length?cart.reduce((a,i)=>a+i.q,0):''}</button></header><main>${admin&&loggedIn?adminV():shopV()}</main>${modalV()}`}
+function shopV(){
+ const list=D.p.map(p=>`<div class="c" onclick="modal={t:'prod',id:'${p.id}',size:null,k:0};render()"><div class="im">${p.im[0]?`<img src="${p.im[0]}" alt="" loading="lazy">`:'Нет фото'}</div>${p.sold?'<span class="sold">Продано</span>':''}<div class="t"><b>${esc(p.n)}</b><span class="pr">${money(p.pr)}</span></div></div>`).join('');
+ return `<p style="color:var(--mut)">${esc(D.s.about)}</p>${list?`<div class="grid">${list}</div>`:'<p>Товаров пока нет.</p>'}${loggedIn?'':'<footer><a onclick="modal={t:\'login\'};render()">Вход для администратора</a></footer>'}`}
+function modalV(){if(!modal)return'';let h='';
+ if(modal.t==='login')h=`<h2 style="margin-top:0">Вход в админ-панель</h2><label>Пароль</label><input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"><button class="p" style="width:100%" onclick="login()">Войти</button>`;
+ if(modal.t==='prod'){const p=prod(modal.id);if(!p){modal=null;return''}
+  h=`<div class="big">${p.im[modal.k]?`<img src="${p.im[modal.k]}" alt="">`:'Нет фото'}</div><div class="th">${p.im.map((s,i)=>`<img src="${s}" onclick="modal.k=${i};render()" alt="">`).join('')}</div>
+  <h2 style="margin:6px 0">${esc(p.n)}</h2><div class="pr" style="font-size:18px">${money(p.pr)}</div><p>${esc(p.d).replace(/\n/g,'<br>')}</p>
+  ${p.sz.length?`<label>Размер</label><div class="sz">${p.sz.map((s,i)=>`<button class="${modal.size===s?'on':''}" onclick="pickSize(${i})">${esc(s)}</button>`).join('')}</div>`:''}
+  ${p.sold?'<button disabled style="width:100%">Продано</button>':`<button class="p" style="width:100%" onclick="addCart()">Купить</button>`}`}
+ if(modal.t==='cart'){h=`<h2 style="margin-top:0">Корзина</h2>`+(cart.length?cart.map((i,n)=>`<div class="box row"><div style="flex:3"><b>${esc(i.n)}</b><br><small>${i.size?'Размер '+esc(i.size)+' · ':''}</small><span class="pr">${money(i.pr)}</span></div><div class="row" style="flex:2"><button onclick="qty(${n},-1)">−</button><span style="text-align:center">${i.q}</span><button onclick="qty(${n},1)">+</button></div></div>`).join('')+`<h3>Итого: <span class="pr">${money(total())}</span></h3><button class="p" style="width:100%" onclick="modal={t:'co'};render()">Оформить заказ</button>`:'<p>Корзина пуста</p>')}
+ if(modal.t==='co'){h=`<h2 style="margin-top:0">Оформление</h2><div class="box"><div>1. Переведите <b class="pr">${money(total())}</b> на карту:</div><div class="card">${esc(D.s.card)||'(номер карты не указан)'}</div><small>${esc(D.s.holder)}</small><br><button onclick="copyCard()">Скопировать номер</button></div>
+  <div>2. Данные для отправки:</div>
+  <label>Имя и фамилия</label><input id="f1" autocomplete="name"><label>Телефон</label><input id="f2" type="tel" autocomplete="tel"><label>Доставка</label><select id="f3"><option>Новая почта</option><option>Укрпочта</option></select>
+  <label>Город</label><input id="f4"><label>Отделение / индекс / адрес</label><input id="f5"><label>Ваш Telegram (тег)</label><input id="f6" placeholder="@username" autocapitalize="none"><label>Комментарий</label><textarea id="f7" rows="2"></textarea>
+  <button class="p" style="width:100%" onclick="send()">3. Отправить заказ продавцу в Telegram</button>`}
+ if(modal.t==='done')h=`<h2 style="margin-top:0">Почти готово ✅</h2><p>Открылся Telegram с готовым сообщением. Нажмите «Отправить» в чате с продавцом. Если чат не открылся, скопируйте заказ и отправьте вручную:</p><textarea rows="8" readonly>${esc(modal.txt)}</textarea><button onclick="copyTxt()">Скопировать</button>`;
+ return `<div class="ov" onclick="if(event.target===this){modal=null;render()}"><div class="md">${h}<br><button style="width:100%;margin-top:8px" onclick="modal=null;render()">Закрыть</button></div></div>`}
+function pickSize(i){modal.size=prod(modal.id).sz[i];render()}
+function copy(t){try{navigator.clipboard.writeText(t).then(()=>status('Скопировано'),()=>status('Не удалось скопировать',1))}catch(e){status('Не удалось скопировать',1)}}
+function copyCard(){copy((D.s.card||'').replace(/\s/g,''))}
+function copyTxt(){copy(modal.txt)}
+function addCart(){const p=prod(modal.id);if(p.sz.length&&!modal.size){alert('Выберите размер');return}
+ const f=cart.find(i=>i.id===p.id&&i.size===modal.size);f?f.q++:cart.push({id:p.id,n:p.n,pr:p.pr,size:modal.size,q:1});modal={t:'cart'};render()}
+function qty(n,d){cart[n].q+=d;if(cart[n].q<1)cart.splice(n,1);render()}
+function send(){const v=i=>document.getElementById('f'+i).value.trim();
+ if(!v(1)||!v(2)||!v(4)||!v(5)||!v(6)){alert('Заполните имя, телефон, город, отделение и Telegram');return}
+ if(!D.s.tg){alert('Продавец ещё не указал Telegram');return}
+ const txt=`🛍 Новый заказ\n`+cart.map((i,n)=>`${n+1}) ${i.n}${i.size?', размер '+i.size:''} × ${i.q} — ${i.pr*i.q} ${D.s.cur}`).join('\n')+`\nИтого: ${total()} ${D.s.cur}\n\nИмя: ${v(1)}\nТелефон: ${v(2)}\nДоставка: ${document.getElementById('f3').value}, ${v(4)}, ${v(5)}\nTelegram: ${v(6)}${v(7)?'\nКомментарий: '+v(7):''}\nОплата: перевод на карту`;
+ const url='https://t.me/'+D.s.tg.replace('@','')+'?text='+encodeURIComponent(txt);
+ cart=[];modal={t:'done',txt};render();
+ location.href=url}
+
+/* ---------- админка ---------- */
+function setS(k,v){D.s[k]=v;mark('s')}
+function upd(id,k,v){prod(id)[k]=v;mark('p',id)}
+function updSz(id,v){upd(id,'sz',v.split(',').map(s=>s.trim()).filter(Boolean))}
+function adminV(){
+ const cl=base();
+ let h=cl?`<div class="ok">☁ Облако подключено: изменения сохраняются автоматически и сразу видны всем по ссылке.</div>`
+  :`<div class="warn">⚠ Облако не подключено: правки сохраняются только на этом устройстве. Покупатели их не увидят. Подключите облако во вкладке «Настройки».</div>`;
+ h+=`<div class="tabs"><button class="${tab==='p'?'on':''}" onclick="tab='p';render()">Товары</button><button class="${tab==='s'?'on':''}" onclick="tab='s';render()">Настройки</button></div>`;
+ if(tab==='s'){
+  const f=(k,l)=>`<label>${l}</label><input value="${esc(D.s[k])}" onchange="setS('${k}',this.value)">`;
+  h+=f('name','Название магазина')+`<label>Цвет сайта</label><input type="color" value="${esc(D.s.color)}" oninput="setS('color',this.value)" style="height:46px;padding:4px">`
+   +f('about','Описание под названием')+f('tg','Ваш Telegram (без @), куда приходят заказы')+f('card','Номер карты для оплаты')+f('holder','Получатель (имя на карте)')+f('cur','Валюта')
+   +`<div class="box"><b>☁ Облако (чтобы изменения были видны всем)</b>
+   <ol style="font-size:14px"><li>Зайдите на <b>console.firebase.google.com</b> → создайте проект (бесплатно).</li><li>Build → <b>Realtime Database</b> → Create database → режим <b>test mode</b> (или в Rules поставьте <code>{"rules":{".read":true,".write":true}}</code>).</li><li>Скопируйте адрес базы вида <code>https://имя-default-rtdb.firebaseio.com</code> и вставьте ниже.</li></ol>
+   <label>Адрес базы</label><input id="dburl" value="${esc(LS.get('dburl')||DB_URL)}" placeholder="https://...firebaseio.com" autocapitalize="none">
+   <div class="row"><button class="p" onclick="connect()">Подключить и проверить</button><button onclick="dlFile()">⬇ Скачать файл с подключением</button></div>
+   <small style="color:var(--mut)">После подключения скачайте файл и загрузите его на хостинг. Этот файл и будет вашим сайтом и админкой.</small></div>`
+   +`<div class="box"><b>🔑 Сменить пароль</b><label>Текущий пароль</label><input id="pw0" type="password"><label>Новый пароль (минимум 6 символов)</label><input id="pw1" type="password"><label>Повторите новый пароль</label><input id="pw2" type="password"><button onclick="chpw()">Сменить пароль</button></div>
+   <button class="d" style="width:100%" onclick="logout()">Выйти из админки</button>`}
+ else{h+=`<button class="p" style="width:100%" onclick="newP()">+ Добавить товар</button>`+D.p.map(p=>`<div class="box"><div class="row"><div><label>Название</label><input value="${esc(p.n)}" onchange="upd('${p.id}','n',this.value)"></div><div><label>Цена</label><input type="number" inputmode="decimal" value="${p.pr}" onchange="upd('${p.id}','pr',+this.value)"></div></div>
+  <label>Описание</label><textarea rows="3" onchange="upd('${p.id}','d',this.value)">${esc(p.d)}</textarea>
+  <label>Размеры через запятую (S, M, L)</label><input value="${esc(p.sz.join(', '))}" onchange="updSz('${p.id}',this.value)">
+  <div>${p.im.map((s,i)=>`<span class="x"><img src="${s}" style="width:64px;height:64px;object-fit:cover;border-radius:8px" alt=""><button onclick="delImg('${p.id}',${i})">×</button></span>`).join('')}</div>
+  <label>Добавить фото</label><input type="file" accept="image/*" multiple onchange="addImg('${p.id}',this.files)">
+  <div class="row"><button onclick="toggleSold('${p.id}')">${p.sold?'Вернуть в продажу':'Отметить «Продано»'}</button><button class="d" onclick="delP('${p.id}')">Удалить</button></div></div>`).join('')}
+ return h}
+function newP(){D.p.unshift({id:'p'+Date.now(),t:Date.now(),n:'Новый товар',pr:0,d:'',sz:['S','M','L'],im:[],sold:false});mark('p',D.p[0].id);render()}
+function toggleSold(id){const p=prod(id);p.sold=!p.sold;mark('p',id);render()}
+function delImg(id,i){prod(id).im.splice(i,1);mark('p',id);render()}
+function delP(id){if(confirm('Удалить товар?')){D.p=D.p.filter(x=>x.id!==id);mark('del',id);render()}}
+function shrink(file){return new Promise((r,j)=>{const i=new Image,u=URL.createObjectURL(file);i.onload=()=>{const k=Math.min(1,1000/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL('image/jpeg',.75))};i.onerror=()=>j();i.src=u})}
+async function addImg(id,files){status('Загрузка фото…');for(const f of files){try{prod(id).im.push(await shrink(f))}catch(e){status('Не удалось прочитать фото',1)}}mark('p',id);render()}
+async function connect(){const u=document.getElementById('dburl').value.trim().replace(/\/+$/,'');
+ if(!u){LS.del('dburl');status('Облако отключено');render();return}
+ if(!/^https:\/\/.+/.test(u)){status('Адрес должен начинаться с https://',1);return}
+ LS.set('dburl',u);
+ try{const c=await cloudLoad();
+  if(c&&c.s){if(confirm('В облаке уже есть данные магазина. Загрузить их сюда? (Отмена — перезаписать облако текущими данными)')){D=norm(c);idbSet(D)}else{markAll();await flush()}}
+  else{markAll();await flush()}
+  status('Облако подключено ✓');render()
+ }catch(e){status('Не удалось подключиться. Проверьте адрес и правила базы',1)}}
+async function chpw(){const g=i=>document.getElementById(i).value;
+ if(hp(g('pw0'))!==curHash()){status('Текущий пароль неверный',1);return}
+ if(g('pw1').length<6){status('Новый пароль слишком короткий',1);return}
+ if(g('pw1')!==g('pw2')){status('Пароли не совпадают',1);return}
+ D.s.ph=hp(g('pw1'));LS.set('adm',D.s.ph);mark('s');status('Пароль изменён ✓');render()}
+function dlFile(){const u=(LS.get('dburl')||DB_URL||'').trim();
+ if(!u){status('Сначала подключите облако',1);return}
+ const h=SRC.replace(/const DB_URL='[^']*';/,()=>"const DB_URL='"+u.replace(/'/g,'')+"';");
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h],{type:'text/html'}));a.download='index.html';document.body.appendChild(a);a.click();a.remove()}
+window.addEventListener('hashchange',()=>{if(location.hash==='#admin'&&!loggedIn){modal={t:'login'};render()}});
+init();
+</script></body></html>

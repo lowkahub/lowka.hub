@@ -91,7 +91,7 @@ button.w small{display:block;font-size:12px;font-weight:400;color:#555}
 .fn{font-size:.5em;line-height:1}.fvb{display:inline-flex;align-items:center;justify-content:center;gap:3px;min-height:52px;min-width:60px;padding:6px 14px;border-radius:26px;border:none;background:transparent;font-size:24px;line-height:1;color:var(--mut)}
 button.fvb.on{color:#d33}.fb.on{color:#d33;border-color:#d33}
 .fl{cursor:pointer;margin:8px 0}
-.tabs.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.tabs.g4 button{padding:8px 4px;font-size:13px}
+.tabs.g4{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px}.tabs.g4 button{padding:8px 4px;font-size:13px}
 @media(max-width:480px){.tabs.g4{grid-template-columns:repeat(2,1fr)}}
 /* ---- планшет ---- */
 @media(min-width:600px){
@@ -135,7 +135,7 @@ const hp=pw=>sha256(SALT+pw);
 /* ---------- дані ---------- */
 const COND=[['new','Нове'],['ex','Відмінний стан'],['good','Добрий стан']];
 const GEN=[['m','Чоловіче'],['f','Жіноче'],['u','Унісекс']];
-const DEF=()=>({s:{name:'Мій магазин',color:'#111111',tg:'',card:'',holder:'',cur:'₴',about:'Одяг з доставкою по Україні',logo:'',
+const DEF=()=>({s:{name:'Мій магазин',color:'#111111',tg:'',card:'',holder:'',cur:'₴',about:'Одяг з доставкою по Україні',logo:'',cn:'',cp:'',
  cats:['Худі','Футболки','Штани','Джинси','Куртки','Светри','Взуття','Аксесуари'],p3on:true,p3max:500,fsOn:true},
  p:[{id:'demo',t:0,n:'Худі оверсайз',pr:900,d:'Щільний фліс, вільний крій. Це приклад товару: видаліть або змініть його в адмінці.',sz:['S','M','L','XL'],kind:'c',im:[],sold:false,g:'u',cat:'Худі',cond:'new',sp:0,se:0}],
  r:{},fv:{}});
@@ -156,9 +156,9 @@ const LS={get(k){try{return localStorage.getItem(NS+k)}catch(e){return null}},se
 const base=()=>(DB_URL||LS.get('dburl')||'').trim().replace(/\/+$/,'');
 const arr=v=>v?(Array.isArray(v)?v:Object.values(v)):[];
 function norm(x){const d=DEF(),s=Object.assign(d.s,x&&x.s||{});
- s.cats=arr(s.cats).filter(Boolean);s.p3on=!!s.p3on;s.fsOn=!!s.fsOn;s.p3max=isFinite(+s.p3max)?+s.p3max:500;s.logo=s.logo||'';
+ s.cats=arr(s.cats).filter(Boolean);s.p3on=!!s.p3on;s.fsOn=!!s.fsOn;s.p3max=isFinite(+s.p3max)?+s.p3max:500;s.logo=s.logo||'';s.cn=s.cn||'';s.cp=s.cp||'';
  let p=arr(x&&x.p);
- p=p.filter(Boolean).map(q=>({id:q.id,t:q.t||0,n:q.n||'',pr:+q.pr||0,d:q.d||'',sz:arr(q.sz).map(String),kind:q.kind==='s'||(!q.kind&&q.cat==='Взуття')?'s':'c',im:arr(q.im),sold:!!q.sold,g:q.g||'',cat:q.cat||'',cond:q.cond||'',sp:+q.sp||0,se:+q.se||0}));
+ p=p.filter(Boolean).map(q=>({id:q.id,t:q.t||0,n:q.n||'',pr:+q.pr||0,d:q.d||'',sz:arr(q.sz).map(String),kind:q.kind==='s'||(!q.kind&&q.cat==='Взуття')?'s':'c',im:arr(q.im),sold:!!q.sold,sa:+q.sa||0,g:q.g||'',cat:q.cat||'',cond:q.cond||'',sp:+q.sp||0,se:+q.se||0}));
  p.sort((a,b)=>b.t-a.t);
  const r={};if(x&&x.r&&typeof x.r==='object')Object.keys(x.r).forEach(k=>{if(x.r[k])r[k]=+x.r[k]||1});
  return{s,p,r,fv:normFv(x&&x.fv)}}
@@ -203,7 +203,7 @@ async function init(){
     if(LS.get('pending')==='1'&&LS.get('adm')){const keepR=D.r;markAll();D.r=Object.assign({},norm(c).r,keepR);D.fv=norm(c).fv;flush()}   // були незбережені правки власника
     else{D=norm(c);idbSet(D)}
    }else if(LS.get('adm')){markAll();flush()}                        // хмара порожня: заливаємо дані
-   checkLogin();if(!loggedIn)admin=false;render();
+   checkLogin();if(!loggedIn)admin=false;render();if(loggedIn)cdRun(1);
   }catch(e){}
  }}
 async function login(){const v=document.getElementById('lp').value;
@@ -477,7 +477,12 @@ function resV(){const l=D.p.filter(isRes).sort((a,b)=>D.r[b.id]-D.r[a.id]);
  return hint('Тут товари, які покупці забронювали, оформивши замовлення. Контакти покупця приходять вам у Telegram. Якщо товар продано — натисніть «Продано», якщо покупець передумав — «Зняти бронь».')
  +(l.length?l.map(p=>`<div class="box"><div class="row" style="align-items:flex-start;cursor:pointer" onclick="openEd('${p.id}')"><img src="${p.im[0]||''}" alt="" style="flex:none;width:56px;height:72px;object-fit:cover;border-radius:8px;background:var(--bd)"><div style="flex:1"><b style="margin:0">${esc(p.n)}</b>${priceH(p)}<br><small style="color:var(--mut)">${szl(p).length?'Розміри: '+esc(szl(p).join(', '))+'<br>':''}Заброньовано ${ago(D.r[p.id])} · ${new Date(D.r[p.id]).toLocaleString('uk-UA')}</small></div></div>
   <div class="row" style="margin-top:8px"><button onclick="setRes('${p.id}',false);render()">Зняти бронь</button><button class="p" onclick="sellRes('${p.id}')">Продано</button></div></div>`).join(''):'<div class="box">Заброньованих товарів зараз немає.</div>')}
-function sellRes(id){prod(id).sold=true;mark('p',id);setRes(id,false);render()}
+function soldV(){const l=D.p.filter(p=>p.sold).sort((a,b)=>(b.sa||0)-(a.sa||0));
+ return hint('Усі товари зі статусом «Продано». Можна повернути в продаж або видалити остаточно (разом із фото в Cloudinary).')
+ +`<div class="box"><b>Продано товарів: ${l.length}</b></div>`
+ +(l.length?l.map(p=>`<div class="box"><div class="row" style="align-items:flex-start;cursor:pointer" onclick="openEd('${p.id}')"><img src="${p.im[0]||''}" alt="" style="flex:none;width:56px;height:72px;object-fit:cover;border-radius:8px;background:var(--bd)"><div style="flex:1"><b style="margin:0">${esc(p.n)}</b>${priceH(p)}<br><small style="color:var(--mut)">${szl(p).length?'Розміри: '+esc(szl(p).join(', '))+'<br>':''}${p.sa?'Продано: '+new Date(p.sa).toLocaleString('uk-UA'):'Дату продажу не збережено'}</small></div></div>
+  <div class="row" style="margin-top:8px"><button onclick="toggleSold('${p.id}')">Повернути в продаж</button><button class="d" onclick="delP('${p.id}')">Видалити</button></div></div>`).join(''):'<div class="box">Проданих товарів поки немає.</div>')}
+function sellRes(id){const p=prod(id);p.sold=true;p.sa=Date.now();mark('p',id);setRes(id,false);render()}
 function applyAll(){const pct=+document.getElementById('gpct').value,e=document.getElementById('gend').value,end=e?new Date(e).getTime():0;
  if(!(pct>=1&&pct<=99)){status('Вкажіть знижку від 1 до 99 %',1);return}
  if(end&&end<=Date.now()){status('Дата закінчення вже минула',1);return}
@@ -499,9 +504,17 @@ function setV(){
  const f=(k,l,h)=>`<label>${l}</label><input value="${esc(D.s[k])}" onchange="setS('${k}',this.value)">${h?hint(h):''}`;
  return`<div class="box"><b>🏪 Магазин</b>${f('name','Назва магазину')}${f('about','Опис під назвою')}
   <label>Колір сайту</label><input type="color" value="${esc(D.s.color)}" oninput="setS('color',this.value)" style="height:46px;padding:4px">
-  <label>Логотип</label>${D.s.logo?`<img src="${D.s.logo}" style="height:48px;display:block;margin:8px 0" alt="">`:''}<input type="file" accept="image/*" onchange="addLogo(this.files[0])">${hint('Логотип з’явиться ліворуч від назви.')}${D.s.logo?`<button class="d" onclick="setS('logo','');render()">Прибрати логотип</button>`:''}</div>
+  <label>Логотип</label>${D.s.logo?`<img src="${D.s.logo}" style="height:48px;display:block;margin:8px 0" alt="">`:''}<input type="file" accept="image/*" onchange="addLogo(this.files[0])">${hint('Логотип з’явиться ліворуч від назви.')}${D.s.logo?`<button class="d" onclick="rmLogo()">Прибрати логотип</button>`:''}</div>
   <div class="box"><b>📨 Замовлення й оплата</b>${f('tg','Ваш Telegram (без @)','Сюди надходитимуть замовлення, а кнопка «Написати продавцю» відкриватиме чат із вами.')}${f('card','Номер картки для оплати')}${f('holder','Отримувач (ім’я на картці)')}${f('cur','Валюта')}</div>
   <div class="box"><b>👕 Типи одягу для фільтра</b><label>Через кому</label><input value="${esc(D.s.cats.join(', '))}" onchange="setCats(this.value)"></div>
+  <div class="box"><b>🖼 Сховище фото (Cloudinary)</b>
+   ${hint('Фото більше не засмічують базу й не сповільнюють сайт. Безкоштовно ~25 ГБ. 1) Зареєструйтесь на cloudinary.com. 2) Settings → Upload → Add upload preset → Signing mode: <b>Unsigned</b> → збережіть. 3) Впишіть сюди Cloud name (на Dashboard) і назву preset.')}
+   <label>Cloud name</label><input value="${esc(D.s.cn)}" autocapitalize="none" onchange="setS('cn',this.value.trim())">
+   <label>Upload preset</label><input value="${esc(D.s.cp)}" autocapitalize="none" onchange="setS('cp',this.value.trim())">
+   ${hint('Щоб при видаленні товару фото зникало і з Cloudinary, вкажіть ключі: Settings → API Keys (API Key і API Secret). Вони зберігаються ЛИШЕ в цьому браузері — не в базі й не у файлі сайту. Вводьте їх тільки на своєму пристрої.')}
+   <label>API Key</label><input value="${esc(LS.get('cdk')||'')}" autocapitalize="none" autocomplete="off" onchange="LS.set('cdk',this.value.trim());cdRun()">
+   <label>API Secret</label><input type="password" value="${esc(LS.get('cds')||'')}" autocapitalize="none" autocomplete="new-password" onchange="LS.set('cds',this.value.trim());cdRun()">
+   <button style="width:100%" onclick="migrateImgs()">Перенести наявні фото в Cloudinary</button></div>
   <div class="box"><b>☁ Хмара (щоб зміни були видні всім)</b>
    <ol style="font-size:14px"><li>Зайдіть на <b>console.firebase.google.com</b> → створіть проєкт (безкоштовно).</li><li>Build → <b>Realtime Database</b> → Create database → режим <b>test mode</b> (або в Rules поставте <code>{"rules":{".read":true,".write":true}}</code>).</li><li>Скопіюйте адресу бази виду <code>https://назва-default-rtdb.firebaseio.com</code> і вставте нижче.</li></ol>
    <label>Адреса бази</label><input id="dburl" value="${esc(LS.get('dburl')||DB_URL)}" placeholder="https://...firebaseio.com" autocapitalize="none">
@@ -510,14 +523,15 @@ function setV(){
   <div class="box"><b>🔑 Змінити пароль</b><label>Поточний пароль</label><input id="pw0" type="password"><label>Новий пароль (мінімум 6 символів)</label><input id="pw1" type="password"><label>Повторіть новий пароль</label><input id="pw2" type="password"><button onclick="chpw()">Змінити пароль</button></div>
   <button class="d" style="width:100%" onclick="logout()">Вийти з адмінки</button>`}
 function adminV(){
- const cl=base(),nr=D.p.filter(isRes).length;
+ const cl=base(),nr=D.p.filter(isRes).length,ns=D.p.filter(p=>p.sold).length;
  let h=cl?`<div class="ok">☁ Хмару підключено: зміни зберігаються автоматично й одразу видні всім за посиланням.</div>`
   :`<div class="warn">⚠ Хмару не підключено: правки зберігаються лише на цьому пристрої, покупці їх не побачать (і броні теж не працюватимуть для інших). Підключіть хмару у вкладці «Налаштування».</div>`;
  const tb=(k,t)=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()">${t}</button>`;
- h+=`<div class="tabs g4">${tb('p','📦 Товари')}${tb('r','🔒 Броні'+(nr?' ('+nr+')':''))}${tb('d','🏷 Знижки')}${tb('s','⚙ Налаштування')}</div>`;
+ h+=`<div class="tabs g4">${tb('p','📦 Товари')}${tb('r','🔒 Броні'+(nr?' ('+nr+')':''))}${tb('sd','✅ Продані'+(ns?' ('+ns+')':''))}${tb('d','🏷 Знижки')}${tb('s','⚙ Налаштування')}</div>`;
  if(tab==='s')return h+setV();
  if(tab==='d')return h+discV();
  if(tab==='r')return h+resV();
+ if(tab==='sd')return h+soldV();
  return h+`<div class="row" style="margin-bottom:6px"><input id="aq" placeholder="🔍 Пошук товару за назвою" value="${esc(AQ)}" oninput="AQ=this.value;updAGrid()" style="margin:0"><button class="p" style="flex:none" onclick="newP()">+ Додати товар</button></div>
   ${hint('Натисніть на товар, щоб змінити його: назву, ціну, фото, розміри, бронь.')}<div id="agl">${D.p.length?agridH():'<p>Товарів поки немає. Натисніть «+ Додати товар».</p>'}</div>`}
 function edV(p){
@@ -544,16 +558,61 @@ function edV(p){
  <button class="p" style="width:100%" onclick="closeM()">Готово</button>
  <button class="d" style="width:100%;margin-top:8px" onclick="delP('${id}')">Видалити товар</button>`}
 function newP(){D.p.unshift({id:'p'+Date.now(),t:Date.now(),n:'Новий товар',pr:0,d:'',sz:[],kind:'c',im:[],sold:false,g:'u',cat:D.s.cats[0]||'',cond:'new',sp:0,se:0});mark('p',D.p[0].id);modal={t:'ed',id:D.p[0].id};render()}
-function toggleSold(id){const p=prod(id);p.sold=!p.sold;mark('p',id);render()}
+function toggleSold(id){const p=prod(id);p.sold=!p.sold;p.sa=p.sold?Date.now():0;mark('p',id);render()}
 async function setRes(id,on){if(on)D.r[id]=Date.now();else delete D.r[id];idbSet(D);
  if(!base()){status('Збережено на цьому пристрої');return}
  try{if(on)await cput('/shop/r/'+id,D.r[id]);else await cdel('/shop/r/'+id);status(on?'Забронювано ✓':'Бронь знято ✓')}
  catch(e){status('Не вдалося зберегти бронь у хмарі',1)}}
-function delImg(id,i){prod(id).im.splice(i,1);mark('p',id);render()}
-function delP(id){if(confirm('Видалити товар?')){D.p=D.p.filter(x=>x.id!==id);delete D.r[id];delete D.fv[id];mark('del',id);modal=null;render()}}
+function delImg(id,i){const u=prod(id).im.splice(i,1)[0];mark('p',id);cdEnq([u]);render()}
+function delP(id){if(confirm('Видалити товар остаточно? Його дані та фото буде видалено з бази й з Cloudinary.')){const im=(prod(id)||{im:[]}).im.slice();D.p=D.p.filter(x=>x.id!==id);delete D.r[id];delete D.fv[id];mark('del',id);cdEnq(im);modal=null;render()}}
 function shrink(file,max,type){return new Promise((r,j)=>{const i=new Image,u=URL.createObjectURL(file);i.onload=()=>{const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(type==='png'?c.toDataURL('image/png'):c.toDataURL('image/jpeg',.75))};i.onerror=()=>j();i.src=u})}
-async function addImg(id,files){status('Завантаження фото…');for(const f of files){try{prod(id).im.push(await shrink(f,1000,'jpeg'))}catch(e){status('Не вдалося прочитати фото',1)}}mark('p',id);render()}
-async function addLogo(f){if(!f)return;try{D.s.logo=await shrink(f,240,'png');mark('s');render()}catch(e){status('Не вдалося прочитати зображення',1)}}
+async function upImg(d){if(!(D.s.cn&&D.s.cp))return d;
+ try{const fd=new FormData();fd.append('file',d);fd.append('upload_preset',D.s.cp);
+  const r=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(D.s.cn)+'/image/upload',{method:'POST',body:fd});
+  if(!r.ok)throw new Error(r.status);const j=await r.json();
+  return j.secure_url.replace('/upload/','/upload/f_auto,q_auto/')}
+ catch(e){status('Не вдалося завантажити в Cloudinary — фото збережено в базі',1);return d}}
+async function addImg(id,files){status('Завантаження фото…');for(const f of files){try{prod(id).im.push(await upImg(await shrink(f,1000,'jpeg')))}catch(e){status('Не вдалося прочитати фото',1)}}mark('p',id);render()}
+/* ---------- видалення фото з Cloudinary (підпис рахується в браузері адміна; секрет зберігається лише тут) ---------- */
+function sha1(s){s=unescape(encodeURIComponent(s));const w=[],l=s.length*8,h=[0x67452301,0xEFCDAB89,0x98BADCFE,0x10325476,0xC3D2E1F0],rl=(v,n)=>(v<<n)|(v>>>(32-n));
+ s+='\x80';while(s.length%64-56)s+='\x00';
+ for(let i=0;i<s.length;i++)w[i>>2]|=s.charCodeAt(i)<<(24-(i%4)*8);
+ w.push((l/4294967296)|0,l|0);
+ for(let o=0;o<w.length;o+=16){const x=w.slice(o,o+16);for(let i=16;i<80;i++)x[i]=rl(x[i-3]^x[i-8]^x[i-14]^x[i-16],1);
+  let a=h[0],b=h[1],c=h[2],d=h[3],e=h[4];
+  for(let i=0;i<80;i++){let f,k;
+   if(i<20){f=(b&c)|(~b&d);k=0x5A827999}else if(i<40){f=b^c^d;k=0x6ED9EBA1}else if(i<60){f=(b&c)|(b&d)|(c&d);k=0x8F1BBCDC}else{f=b^c^d;k=0xCA62C1D6}
+   const t=(rl(a,5)+f+e+k+x[i])|0;e=d;d=c;c=rl(b,30);b=a;a=t}
+  h[0]=(h[0]+a)|0;h[1]=(h[1]+b)|0;h[2]=(h[2]+c)|0;h[3]=(h[3]+d)|0;h[4]=(h[4]+e)|0}
+ return h.map(v=>(v>>>0).toString(16).padStart(8,'0')).join('')}
+function cldId(u){const m=/^https:\/\/res\.cloudinary\.com\/([^/]+)\/image\/upload\/(.+)$/.exec(u||'');if(!m)return null;
+ let g=m[2].split('/'),v=g.findIndex(x=>/^v\d+$/.test(x));
+ if(v>=0)g=g.slice(v+1);else while(g.length>1&&/^[a-z]{1,4}_[^/]*$/.test(g[0]))g.shift();
+ g=g.map(x=>{try{return decodeURIComponent(x)}catch(e){return x}});
+ g[g.length-1]=g[g.length-1].replace(/\.[^./]+$/,'');
+ return{cloud:m[1],id:g.join('/')}}
+const cdK=()=>({k:(LS.get('cdk')||'').trim(),s:(LS.get('cds')||'').trim()});
+const cdQ=()=>{try{return JSON.parse(LS.get('cdq')||'[]')}catch(e){return[]}};
+async function cldDel(id){const {k,s}=cdK(),ts=Math.floor(Date.now()/1000);
+ const fd=new FormData();fd.append('public_id',id);fd.append('timestamp',ts);fd.append('api_key',k);fd.append('invalidate','true');
+ fd.append('signature',sha1('invalidate=true&public_id='+id+'&timestamp='+ts+s));
+ const r=await fetch('https://api.cloudinary.com/v1_1/'+encodeURIComponent(D.s.cn)+'/image/destroy',{method:'POST',body:fd});
+ const j=await r.json().catch(()=>({}));
+ if(!r.ok||(j.result!=='ok'&&j.result!=='not found'))throw new Error((j.error&&j.error.message)||r.status)}
+function cdEnq(urls){const q=cdQ();urls.forEach(u=>{const r=cldId(u);if(r&&r.cloud===D.s.cn&&!q.includes(r.id))q.push(r.id)});LS.set('cdq',JSON.stringify(q));cdRun()}
+let cdB=false;
+async function cdRun(quiet){if(cdB)return;const q=cdQ();if(!q.length)return;const {k,s}=cdK();
+ if(!(D.s.cn&&k&&s)){if(!quiet)status('Фото залишилися в Cloudinary: вкажіть API Key і API Secret в налаштуваннях — вони видаляться автоматично',1);return}
+ cdB=true;let fail=0,last='';
+ for(const id of q.slice()){try{await cldDel(id);LS.set('cdq',JSON.stringify(cdQ().filter(x=>x!==id)))}catch(e){fail++;last=e.message||''}}
+ cdB=false;status(fail?'Не вдалося видалити фото з Cloudinary ('+last+'). Спробуємо ще раз пізніше':'Фото видалено з Cloudinary ✓',!!fail)}
+function rmLogo(){const u=D.s.logo;setS('logo','');cdEnq([u]);render()}
+async function migrateImgs(){if(!(D.s.cn&&D.s.cp)){status('Спочатку вкажіть Cloud name і Upload preset',1);return}
+ if(!confirm('Перенести всі наявні фото з бази в Cloudinary?'))return;let n=0;status('Переносимо фото… це може зайняти хвилину');
+ for(const p of D.p){let ch=false;for(let i=0;i<p.im.length;i++)if(p.im[i].startsWith('data:')){const u=await upImg(p.im[i]);if(!u.startsWith('data:')){p.im[i]=u;ch=true;n++}}if(ch)mark('p',p.id)}
+ if(D.s.logo&&D.s.logo.startsWith('data:')){const u=await upImg(D.s.logo);if(!u.startsWith('data:')){D.s.logo=u;mark('s');n++}}
+ status('Перенесено фото: '+n+' ✓');render()}
+async function addLogo(f){if(!f)return;try{const old=D.s.logo;D.s.logo=await upImg(await shrink(f,240,'png'));mark('s');if(old&&old!==D.s.logo)cdEnq([old]);render()}catch(e){status('Не вдалося прочитати зображення',1)}}
 async function connect(){const u=document.getElementById('dburl').value.trim().replace(/\/+$/,'');
  if(!u){LS.del('dburl');status('Хмару відключено');render();return}
  if(!/^https:\/\/.+/.test(u)){status('Адреса має починатися з https://',1);return}

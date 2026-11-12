@@ -292,7 +292,7 @@ function updGrid(){const g=document.getElementById('gl');if(!g)return;g.innerHTM
 function shopV(){const n=fcount();
  return`<p style="color:var(--mut);margin-top:0">${esc(D.s.about)}</p>${promoH()}
  <div class="row" style="margin-bottom:8px"><input id="fq" placeholder="Пошук за назвою" value="${esc(F.q)}" oninput="F.q=this.value;updGrid()" style="margin:0"><button style="flex:none" onclick="F.open=!F.open;render()">⚙ Фільтри${n?' ('+n+')':''}</button></div>
- ${F.open?filtH():''}<p id="cnt" style="color:var(--mut);font-size:13px;margin:6px 0 10px">${cntT()}</p><div id="gl">${D.p.length?gridH():'<p>Товарів поки немає.</p>'}</div>${loggedIn?'':'<footer><a onclick="modal={t:\'login\'};render()">Вхід для адміністратора</a></footer>'}`}
+ ${F.open?filtH():''}<p id="cnt" style="color:var(--mut);font-size:13px;margin:6px 0 10px">${cntT()}</p><div id="gl">${D.p.length?gridH():'<p>Товарів поки немає.</p>'}</div>`}
 
 /* ---------- кошик і акції ---------- */
 function calc(){const L=[],U=[];

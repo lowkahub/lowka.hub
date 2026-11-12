@@ -31,8 +31,8 @@ main{max-width:960px;margin:0 auto;padding:12px}
 .c.na .im{opacity:.55}
 .im img,.big img{width:100%;height:100%;object-fit:cover}
 .c .t{padding:10px}.c b{display:block;overflow-wrap:anywhere;margin-bottom:4px}
-.pr{display:inline-block;background:var(--acc);color:#fff;font-weight:700;border-radius:8px;padding:2px 9px}
-.pr.sale{background:#d33}
+.pr{display:inline-block;color:var(--fg);font-weight:700}
+.pr.sale{color:#d33}
 .old{color:var(--mut);text-decoration:line-through;font-size:.85em;margin-left:6px;font-weight:400;white-space:nowrap}
 .tm{display:block;color:#d33;font-size:12px;font-weight:600;margin-top:4px}
 .sold,.rsv,.bdg{position:absolute;top:8px;border-radius:8px;padding:2px 8px;font-size:12px}
@@ -40,7 +40,7 @@ main{max-width:960px;margin:0 auto;padding:12px}
 .rsv{left:8px;background:#f5a623;color:#000;font-weight:600}
 .bdg{right:8px;background:#d33;color:#fff;font-weight:700}
 .ov{position:fixed;inset:0;background:#0008;z-index:20;display:flex;align-items:flex-end;justify-content:center}
-.md{background:var(--bg);width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:18px 18px 0 0;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.md{background:var(--bg);width:100%;max-width:560px;max-height:92vh;max-height:92dvh;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-radius:18px 18px 0 0}
 .sz{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .sz button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
@@ -68,6 +68,31 @@ ol{padding-left:20px;margin:6px 0}
 code{overflow-wrap:anywhere}
 noscript{display:block;padding:20px;text-align:center}
 
+
+button.g{background:#8e8e93;color:#fff;border-color:#8e8e93}
+button.tgb{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:#229ED9;color:#fff;border-color:#229ED9;font-weight:600}
+button.w small{display:block;font-size:12px;font-weight:400;color:#555}
+.hint{color:var(--mut);font-size:13px;margin:4px 0 10px}
+.mh{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-bottom:1px solid var(--bd)}
+.mh .cl{flex:none;width:44px;padding:0;font-size:20px;line-height:1;border-radius:50%}
+.mh b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:16px}
+.mb{padding:14px 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.gal{position:relative;border-radius:14px;overflow:hidden;background:var(--card)}
+.gs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;height:min(38vh,300px)}
+.gs::-webkit-scrollbar{display:none}
+.gs>div{flex:0 0 100%;scroll-snap-align:center;height:100%;display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:13px}
+.gs img{width:100%;height:100%;object-fit:contain}
+.ga{position:absolute;top:50%;transform:translateY(-50%);width:36px;min-height:36px;height:36px;padding:0;border:none;border-radius:50%;background:#0006;color:#fff;font-size:22px;line-height:1}
+.ga.l{left:8px}.ga.r{right:8px}
+.dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:6px;pointer-events:none}
+.dots i{width:7px;height:7px;border-radius:50%;background:#fff7;box-shadow:0 0 2px #0006}.dots i.on{background:#fff}
+.szl{color:var(--mut);font-size:12px;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap}
+.fvb{min-height:52px;min-width:60px;padding:6px 14px;border-radius:26px;border:none;background:transparent;font-size:24px;color:var(--mut)}
+button.fvb.on{color:#d33}.fb.on{color:#d33;border-color:#d33}
+.fl{cursor:pointer;margin:8px 0}
+.tabs.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.tabs.g4 button{padding:8px 4px;font-size:13px}
+@media(max-width:480px){.tabs.g4{grid-template-columns:repeat(2,1fr)}}
 /* ---- планшет ---- */
 @media(min-width:600px){
  header{padding:10px 18px}header h1{font-size:19px}
@@ -112,11 +137,11 @@ const COND=[['new','Нове'],['ex','Відмінний стан'],['good','Д�
 const GEN=[['m','Чоловіче'],['f','Жіноче'],['u','Унісекс']];
 const DEF=()=>({s:{name:'Мій магазин',color:'#111111',tg:'',card:'',holder:'',cur:'₴',about:'Одяг з доставкою по Україні',logo:'',
  cats:['Худі','Футболки','Штани','Джинси','Куртки','Светри','Взуття','Аксесуари'],p3on:true,p3max:500,fsOn:true},
- p:[{id:'demo',t:0,n:'Худі оверсайз',pr:900,d:'Щільний фліс, вільний крій. Це приклад товару: видаліть або змініть його в адмінці.',sz:['S','M','L','XL'],im:[],sold:false,g:'u',cat:'Худі',cond:'new',sp:0,se:0}],
- r:{}});
+ p:[{id:'demo',t:0,n:'Худі оверсайз',pr:900,d:'Щільний фліс, вільний крій. Це приклад товару: видаліть або змініть його в адмінці.',sz:['S','M','L','XL'],kind:'c',im:[],sold:false,g:'u',cat:'Худі',cond:'new',sp:0,se:0}],
+ r:{},fv:{}});
 let D=DEF();
 let cart=[],modal=null,admin=false,tab='p',loggedIn=false,busy=false;
-const F0=()=>({open:false,q:'',g:'',cats:[],sz:[],cond:[],min:'',max:''});
+const F0=()=>({open:false,q:'',g:'',cats:[],sz:[],sh:[],cond:[],min:'',max:''});
 let F=F0();
 const app=document.getElementById('app');
 const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -133,10 +158,11 @@ const arr=v=>v?(Array.isArray(v)?v:Object.values(v)):[];
 function norm(x){const d=DEF(),s=Object.assign(d.s,x&&x.s||{});
  s.cats=arr(s.cats).filter(Boolean);s.p3on=!!s.p3on;s.fsOn=!!s.fsOn;s.p3max=isFinite(+s.p3max)?+s.p3max:500;s.logo=s.logo||'';
  let p=arr(x&&x.p);
- p=p.filter(Boolean).map(q=>({id:q.id,t:q.t||0,n:q.n||'',pr:+q.pr||0,d:q.d||'',sz:arr(q.sz),im:arr(q.im),sold:!!q.sold,g:q.g||'',cat:q.cat||'',cond:q.cond||'',sp:+q.sp||0,se:+q.se||0}));
+ p=p.filter(Boolean).map(q=>({id:q.id,t:q.t||0,n:q.n||'',pr:+q.pr||0,d:q.d||'',sz:arr(q.sz).map(String),kind:q.kind==='s'||(!q.kind&&q.cat==='Взуття')?'s':'c',im:arr(q.im),sold:!!q.sold,g:q.g||'',cat:q.cat||'',cond:q.cond||'',sp:+q.sp||0,se:+q.se||0}));
  p.sort((a,b)=>b.t-a.t);
  const r={};if(x&&x.r&&typeof x.r==='object')Object.keys(x.r).forEach(k=>{if(x.r[k])r[k]=+x.r[k]||1});
- return{s,p,r}}
+ return{s,p,r,fv:normFv(x&&x.fv)}}
+function normFv(x){const o={};if(x&&typeof x==='object')Object.keys(x).forEach(p=>{const v=x[p];if(v&&typeof v==='object'){const c={};Object.keys(v).forEach(k=>{if(v[k])c[k]=1});if(Object.keys(c).length)o[p]=c}});return o}
 
 /* ---------- локальне сховище (IndexedDB, без ліміту 5 МБ) ---------- */
 const idb=()=>new Promise((res,rej)=>{try{const r=indexedDB.open(NS,1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}});
@@ -160,7 +186,7 @@ async function flush(){
  try{
   if(dS){await cput('/shop/s',D.s);dS=false}
   for(const id of [...dP]){const p=prod(id);if(p)await cput('/shop/p/'+id,p);dP.delete(id)}
-  for(const id of [...dDel]){await cdel('/shop/p/'+id);await cdel('/shop/r/'+id).catch(()=>{});dDel.delete(id)}
+  for(const id of [...dDel]){await cdel('/shop/p/'+id);await cdel('/shop/r/'+id).catch(()=>{});await cdel('/shop/fv/'+id).catch(()=>{});dDel.delete(id)}
   LS.del('pending');status('Збережено ✓')
  }catch(e){status('Не вдалося зберегти в хмару. Перевірте інтернет і налаштування бази',1)}}
 
@@ -169,11 +195,12 @@ const checkLogin=()=>{loggedIn=LS.get('adm')===curHash()};
 async function init(){
  const l=await idbGet();if(l)D=norm(l);
  checkLogin();admin=loggedIn;render();
+ restoreMe().then(()=>{if(!isTyping())render()});
  if(location.hash==='#admin'&&!loggedIn){modal={t:'login'};render()}
  if(base()){
   try{const c=await cloudLoad();
    if(c&&c.s){
-    if(LS.get('pending')==='1'&&LS.get('adm')){const keepR=D.r;markAll();D.r=Object.assign({},norm(c).r,keepR);flush()}   // були незбережені правки власника
+    if(LS.get('pending')==='1'&&LS.get('adm')){const keepR=D.r;markAll();D.r=Object.assign({},norm(c).r,keepR);D.fv=norm(c).fv;flush()}   // були незбережені правки власника
     else{D=norm(c);idbSet(D)}
    }else if(LS.get('adm')){markAll();flush()}                        // хмара порожня: заливаємо дані
    checkLogin();if(!loggedIn)admin=false;render();
@@ -199,21 +226,33 @@ const SZO=['XXS','XS','S','M','L','XL','XXL','XXXL','3XL','4XL','5XL'];
 function cmpSz(a,b){const ia=SZO.indexOf(String(a).toUpperCase()),ib=SZO.indexOf(String(b).toUpperCase());
  if(ia>=0&&ib>=0)return ia-ib;if(ia>=0)return -1;if(ib>=0)return 1;
  const na=parseFloat(a),nb=parseFloat(b);if(!isNaN(na)&&!isNaN(nb)&&na!==nb)return na-nb;return String(a).localeCompare(String(b),'uk')}
-const allSizes=()=>[...new Set(D.p.flatMap(p=>p.sz))].sort(cmpSz);
 
 /* ---------- вигляд ---------- */
+const CLOTH=['XS','S','M','L','XL','XXL'];
+const SHOES=Array.from({length:9},(_,i)=>String(36+i));      // 36–44
+const TGI='<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>';
+const kindOf=p=>p.kind==='s'?'s':'c';
+const szl=p=>p.sz.slice().sort(cmpSz);
+const sizesOf=k=>[...new Set([...(k==='s'?SHOES:CLOTH),...D.p.filter(p=>kindOf(p)===k).flatMap(p=>p.sz)])].sort(cmpSz);
+const favN=id=>Object.keys(D.fv&&D.fv[id]||{}).length;
+const isFav=id=>!!(me&&D.fv&&D.fv[id]&&D.fv[id]['u_'+uk(me.id)]);
+let AQ='',authB=false;
+
 function theme(){document.documentElement.style.setProperty('--acc',D.s.color);document.title=D.s.name;const m=document.querySelector('meta[name=theme-color]');if(m)m.content=D.s.color}
-function purge(){const n=cart.length;cart=cart.filter(i=>avail(prod(i.id)));if(cart.length!==n)status('Деякі товари вже недоступні й видалені з кошика',1)}
+function purge(){const n=cart.length;cart=cart.filter(i=>avail(prod(i.id)));if(cart.length!==n){status('Деякі товари вже недоступні й видалені з кошика',1);saveU()}}
 function render(){theme();if(modal&&(modal.t==='cart'||modal.t==='co'))purge();
+ const m0=document.querySelector('.md'),sc=m0?m0.scrollTop:0,same=!!m0&&!!modal&&m0.dataset.t===modal.t;
  document.body.style.overflow=modal?'hidden':'';
  const cnt=cart.reduce((a,i)=>a+i.q,0);
- app.innerHTML=`<header><h1>${D.s.logo?`<img class="lg" src="${D.s.logo}" alt="">`:''}<span>${esc(D.s.name)}</span></h1>${loggedIn?`<button onclick="admin=!admin;render()">${admin?'Магазин':'⚙ Адмін'}</button>`:''}<button onclick="modal={t:'cart'};render()">🛒 ${cnt||''}</button></header><main>${admin&&loggedIn?adminV():shopV()}</main>${modalV()}`;
+ app.innerHTML=`<header><h1>${D.s.logo?`<img class="lg" src="${D.s.logo}" alt="">`:''}<span>${esc(D.s.name)}</span></h1>${loggedIn?`<button onclick="admin=!admin;render()">${admin?'Магазин':'⚙ Адмін'}</button>`:''}<button onclick="openMe()" aria-label="Профіль">👤</button><button onclick="modal={t:'cart'};render()" aria-label="Кошик">🛒 ${cnt||''}</button></header><main>${admin&&loggedIn?adminV():shopV()}</main>${modalV()}`;
+ const m=document.querySelector('.md');if(m&&same)m.scrollTop=sc;
+ const g=document.getElementById('gs');if(g&&modal&&modal.k)g.scrollLeft=modal.k*g.clientWidth;
  tick()}
 const priceH=p=>`<span class="pr${isSale(p)?' sale':''}">${money(effP(p))}</span>${isSale(p)?`<span class="old">${money(p.pr)}</span>`:''}`;
 const tmH=p=>isSale(p)&&p.se?`<span class="tm">⏳ до кінця акції: <span data-e="${p.se}">${fmt(p.se-Date.now())}</span></span>`:'';
 function promoH(){const a=[];
  if(D.s.p3on)a.push(`🎁 Купуйте 2 речі — будь-яка третя вартістю до ${money(D.s.p3max)} безкоштовно`);
- if(D.s.fsOn)a.push('🚚 Безкоштовна доставка при повній передоплаті');
+ if(D.s.fsOn)a.push('🚚 При повній передоплаті безкоштовна доставка');
  return a.length?`<div class="promo">${a.map(x=>`<div>${x}</div>`).join('')}</div>`:''}
 
 /* ---------- фільтри ---------- */
@@ -223,24 +262,31 @@ function filt(){const q=F.q.trim().toLowerCase(),mn=F.min===''?null:+F.min,mx=F.
   if(F.g&&p.g&&p.g!=='u'&&p.g!==F.g)return false;
   if(F.cats.length&&!F.cats.includes(p.cat))return false;
   if(F.cond.length&&!F.cond.includes(p.cond))return false;
-  if(F.sz.length&&!p.sz.some(s=>F.sz.includes(s)))return false;
+  if(F.sz.length||F.sh.length){
+   const ok=kindOf(p)==='s'?(F.sh.length&&p.sz.some(s=>F.sh.includes(s))):(F.sz.length&&p.sz.some(s=>F.sz.includes(s)));
+   if(!ok)return false}
   const e=effP(p);if(mn!==null&&e<mn)return false;if(mx!==null&&e>mx)return false;return true})}
-const fcount=()=>(F.g?1:0)+(F.cats.length?1:0)+(F.sz.length?1:0)+(F.cond.length?1:0)+((F.min!==''||F.max!=='')?1:0);
+const fcount=()=>(F.g?1:0)+(F.cats.length?1:0)+(F.sz.length?1:0)+(F.sh.length?1:0)+(F.cond.length?1:0)+((F.min!==''||F.max!=='')?1:0);
 function tg(k,v){if(k==='g')F.g=v;else{const a=F[k],i=a.indexOf(v);i>=0?a.splice(i,1):a.push(v)}render()}
 function resetF(){F=Object.assign(F0(),{open:true});render()}
 function chips(k,items){return`<div class="chips">${items.map(([v,l])=>`<button class="${(k==='g'?F.g===v:F[k].includes(v))?'on':''}" data-v="${esc(v)}" onclick="tg('${k}',this.dataset.v)">${esc(l)}</button>`).join('')}</div>`}
-function filtH(){const sz=allSizes();
+function filtH(){
  return`<div class="box"><label>Стать</label>${chips('g',[['','Усі'],['m','Чоловіче'],['f','Жіноче']])}
  <label>Тип одягу</label>${chips('cats',D.s.cats.map(c=>[c,c]))}
- ${sz.length?`<label>Розмір</label>${chips('sz',sz.map(s=>[s,s]))}`:''}
+ <label>Розмір одягу</label>${chips('sz',sizesOf('c').map(s=>[s,s]))}
+ <label>Розмір взуття</label>${chips('sh',sizesOf('s').map(s=>[s,s]))}
  <label>Стан</label>${chips('cond',COND)}
  <label>Ціна (${esc(D.s.cur)})</label><div class="row"><input type="number" inputmode="decimal" placeholder="від" value="${esc(F.min)}" oninput="F.min=this.value;updGrid()"><input type="number" inputmode="decimal" placeholder="до" value="${esc(F.max)}" oninput="F.max=this.value;updGrid()"></div>
  <button style="width:100%" onclick="resetF()">Скинути фільтри</button></div>`}
+
+/* картка товару: однакова в магазині та в адмінці */
+function cardH(p,adm){const na=!avail(p),n=favN(p.id),sz=szl(p).join(' · ');
+ const lab=p.sold?'<span class="sold">Продано</span>':isRes(p)?'<span class="rsv">Заброньовано</span>':'';
+ const bd=isSale(p)&&!na?`<span class="bdg">−${Math.round((1-p.sp/p.pr)*100)}%</span>`:'';
+ const hb=adm?(n?`<span class="fvb">♥ ${n}</span>`:''):`<button class="fvb${isFav(p.id)?' on':''}" onclick="event.stopPropagation();toggleFav('${p.id}')" aria-label="В обране">${isFav(p.id)?'♥':'♡'}${n?' '+n:''}</button>`;
+ return`<div class="c${na?' na':''}" onclick="${adm?'openEd':'openProd'}('${p.id}')"><div class="im">${p.im[0]?`<img src="${p.im[0]}" alt="" loading="lazy">`:'Немає фото'}</div>${lab}${bd}<div class="t"><b>${esc(p.n)}</b>${sz?`<div class="szl">${esc(sz)}</div>`:''}<div class="pl"><span>${priceH(p)}</span>${hb}</div>${na?'':tmH(p)}</div></div>`}
 function gridH(){const l=filt();
- return l.length?`<div class="grid">${l.map(p=>{const na=!avail(p);
-  const lab=p.sold?'<span class="sold">Продано</span>':isRes(p)?'<span class="rsv">Заброньовано</span>':'';
-  const bd=isSale(p)&&!na?`<span class="bdg">−${Math.round((1-p.sp/p.pr)*100)}%</span>`:'';
-  return`<div class="c${na?' na':''}" onclick="openProd('${p.id}')"><div class="im">${p.im[0]?`<img src="${p.im[0]}" alt="" loading="lazy">`:'Немає фото'}</div>${lab}${bd}<div class="t"><b>${esc(p.n)}</b>${priceH(p)}${na?'':tmH(p)}</div></div>`}).join('')}</div>`:'<p style="color:var(--mut)">За вашими фільтрами нічого не знайдено.</p>'}
+ return l.length?`<div class="grid">${l.map(p=>cardH(p,0)).join('')}</div>`:'<p style="color:var(--mut)">За вашими фільтрами нічого не знайдено.</p>'}
 const cntT=()=>'Знайдено: '+filt().length+' з '+D.p.length;
 function updGrid(){const g=document.getElementById('gl');if(!g)return;g.innerHTML=gridH();document.getElementById('cnt').textContent=cntT();tick()}
 function shopV(){const n=fcount();
@@ -259,35 +305,72 @@ function calc(){const L=[],U=[];
 function lineH(l){return`<div class="box row"><div style="flex:3"><b>${esc(l.p.n)}</b><br>${l.size?`<small>Розмір ${esc(l.size)}</small><br>`:''}${priceH(l.p)}${l.fq?`<br><small style="color:#2e9e5b">🎁 безкоштовно × ${l.fq}</small>`:''}</div><div class="row" style="flex:2"><button onclick="qty(${l.n},-1)">−</button><span style="text-align:center">${l.q}</span><button onclick="qty(${l.n},1)">+</button></div></div>`}
 const fv=i=>esc(modal.f&&modal.f[i]||'');
 function fs(i,v){(modal.f=modal.f||{})[i]=v}
-function openProd(id){const p=prod(id);modal={t:'prod',id,size:p.sz.length===1?p.sz[0]:null,k:0};render()}
-function modalV(){if(!modal)return'';let h='';
- if(modal.t==='login')h=`<h2 style="margin-top:0">Вхід в адмін-панель</h2><label>Пароль</label><input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"><button class="p" style="width:100%" onclick="login()">Увійти</button>`;
+function openProd(id){const p=prod(id),b=modal&&modal.t==='me'?modal:null;modal={t:'prod',id,size:p.sz.length===1?p.sz[0]:null,k:0,back:b};render()}
+function closeM(){modal=(modal&&modal.back)||null;render()}
+const TPK=['n','ph','dl','ci','br','tg'];                       // шаблон профілю → поля оформлення 1..6
+function openCo(){const t=(me&&me.tpl)||{},f={};TPK.forEach((k,i)=>{if(t[k])f[i+1]=t[k]});modal={t:'co',f};render()}
+function galS(el){const i=Math.round(el.scrollLeft/Math.max(1,el.clientWidth));if(modal)modal.k=i;el.parentNode.querySelectorAll('.dots i').forEach((d,j)=>d.classList.toggle('on',j===i))}
+function galGo(d){const el=document.getElementById('gs');if(el)el.scrollBy({left:d*el.clientWidth,behavior:'smooth'})}
+function askSeller(id){if(!D.s.tg){alert('Продавець ще не вказав Telegram');return}
+ const p=id?prod(id):null;
+ const t=p?'Доброго дня! Цікавить товар: '+p.n+(modal&&modal.size?', розмір '+modal.size:''):'Доброго дня! У мене є питання щодо замовлення';
+ location.href='https://t.me/'+D.s.tg.replace('@','')+'?text='+encodeURIComponent(t)}
+const tgBtn=id=>`<button class="tgb" style="margin-top:8px" onclick="askSeller(${id?`'${id}'`:''})">${TGI}Написати продавцю</button>`;
+const orderBtn=on=>`<button class="w" style="width:100%" onclick="${on}">Оформити замовлення<small>відправить продавцю в Telegram</small></button>`;
+
+function modalV(){if(!modal)return'';let h='',ti='';
+ if(modal.t==='login'){ti='Вхід в адмін-панель';h=`<label>Пароль</label><input id="lp" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')login()"><button class="p" style="width:100%" onclick="login()">Увійти</button>`}
+ if(modal.t==='auth'){ti='Профіль';
+  h=`<div class="tabs"><button class="${modal.reg?'':'on'}" onclick="modal.reg=0;render()">Вхід</button><button class="${modal.reg?'on':''}" onclick="modal.reg=1;render()">Створити профіль</button></div>
+  ${modal.note?`<div class="warn">${esc(modal.note)}</div>`:''}
+  <p class="hint" style="margin-top:0">У профілі зберігаються ваш кошик, обрані товари та шаблон даних для замовлення.</p>
+  <label>Логін</label><input id="al" autocapitalize="none" autocomplete="username" placeholder="наприклад: anna_k">
+  <label>Пароль${modal.reg?' (мінімум 6 символів)':''}</label><input id="ap" type="password" autocomplete="${modal.reg?'new-password':'current-password'}" onkeydown="if(event.key==='Enter')doAuth()">
+  <button class="p" style="width:100%" onclick="doAuth()">${modal.reg?'Створити профіль':'Увійти'}</button>
+  ${modal.reg?'<p class="hint">Логін: латиниця, цифри, крапка, _ або -, від 3 до 20 символів. Не використовуйте пароль, який ви вже застосовуєте деінде.</p>':''}`}
+ if(modal.t==='me'&&me){ti='Мій профіль';const t=me.tpl||{},fl=D.p.filter(p=>isFav(p.id)),cnt=cart.reduce((a,i)=>a+i.q,0);
+  const ti2=(k,l,ex)=>`<label>${l}</label><input value="${esc(t[k]||'')}" oninput="tp('${k}',this.value)" ${ex||''}>`;
+  h=`<div class="box"><b>👤 ${esc(me.id)}</b></div>
+  <div class="box"><b>📝 Шаблон для замовлення</b><div class="hint">Ці дані автоматично підставляться при оформленні замовлення.</div>
+  ${ti2('n','Ім’я та прізвище','autocomplete="name"')}${ti2('ph','Телефон','type="tel" autocomplete="tel"')}
+  <label>Доставка</label><select onchange="tp('dl',this.value)"><option${t.dl==='Укрпошта'?'':' selected'}>Нова пошта</option><option${t.dl==='Укрпошта'?' selected':''}>Укрпошта</option></select>
+  ${ti2('ci','Місто')}${ti2('br','Відділення / індекс / адреса')}${ti2('tg','Ваш Telegram (тег)','placeholder="@username" autocapitalize="none"')}
+  <button class="p" style="width:100%" onclick="saveTpl()">Зберегти шаблон</button></div>
+  <div class="box"><b>♥ Обране (${fl.length})</b>${fl.length?fl.map(p=>`<div class="row fl" onclick="openProd('${p.id}')"><img src="${p.im[0]||''}" alt="" style="flex:none;width:48px;height:60px;object-fit:cover;border-radius:8px;background:var(--bd)"><div style="flex:1"><b style="margin:0">${esc(p.n)}</b>${priceH(p)}${avail(p)?'':'<br><small style="color:var(--mut)">'+(p.sold?'Продано':'Заброньовано')+'</small>'}</div><button class="fvb on" style="flex:none" onclick="event.stopPropagation();toggleFav('${p.id}')" aria-label="Прибрати з обраного">♥</button></div>`).join(''):'<p class="hint">Поки порожньо. Натисніть ♡ на товарі, щоб додати його сюди.</p>'}</div>
+  <button style="width:100%" onclick="modal={t:'cart'};render()">🛒 Кошик${cnt?' ('+cnt+')':''}</button>
+  <button class="d" style="width:100%;margin-top:8px" onclick="logoutU()">Вийти з профілю</button>
+  <button class="d" style="width:100%;margin-top:8px" onclick="delMe()">Видалити профіль</button>`}
  if(modal.t==='prod'){const p=prod(modal.id);if(!p){modal=null;return''}
-  const meta=[gName(p.g),p.cat,cName(p.cond)].filter(Boolean).join(' · ');
-  h=`<div class="big">${p.im[modal.k]?`<img src="${p.im[modal.k]}" alt="">`:'Немає фото'}</div><div class="th">${p.im.map((s,i)=>`<img src="${s}" onclick="modal.k=${i};render()" alt="">`).join('')}</div>
-  <h2 style="margin:6px 0">${esc(p.n)}</h2><div style="font-size:18px">${priceH(p)}</div>${tmH(p)}
+  const meta=[gName(p.g),p.cat,cName(p.cond)].filter(Boolean).join(' · '),n=favN(p.id),S=szl(p),k=modal.k||0;
+  const gal=`<div class="gal"><div class="gs" id="gs" onscroll="galS(this)">${p.im.length?p.im.map(s=>`<div><img src="${s}" alt=""></div>`).join(''):'<div>Немає фото</div>'}</div>${p.im.length>1?`<button class="ga l" onclick="galGo(-1)" aria-label="Попереднє фото">‹</button><button class="ga r" onclick="galGo(1)" aria-label="Наступне фото">›</button><div class="dots">${p.im.map((_,i)=>`<i class="${i===k?'on':''}"></i>`).join('')}</div>`:''}</div>`;
+  ti=p.n;
+  h=`${gal}<h2 style="margin:10px 0 6px">${esc(p.n)}</h2><div style="font-size:18px">${priceH(p)}</div>${tmH(p)}
+  <div class="row" style="margin:10px 0"><button class="fb${isFav(p.id)?' on':''}" style="flex:none" onclick="toggleFav('${p.id}')">${isFav(p.id)?'♥ В обраному':'♡ В обране'}</button><span style="color:var(--mut);font-size:13px">Додали в обране: ${n}</span></div>
   ${meta?`<p style="color:var(--mut);font-size:13px;margin:8px 0 0">${esc(meta)}</p>`:''}<p>${esc(p.d).replace(/\n/g,'<br>')}</p>
-  ${p.sz.length>1?`<label>Розмір</label><div class="sz">${p.sz.map((s,i)=>`<button class="${modal.size===s?'on':''}" onclick="pickSize(${i})">${esc(s)}</button>`).join('')}</div>`:p.sz.length===1?`<p><label>Розмір:</label> <b>${esc(p.sz[0])}</b></p>`:''}
-  ${p.sold?'<button disabled style="width:100%">Продано</button>':isRes(p)?'<button disabled style="width:100%">Заброньовано</button>':`<button class="w" style="width:100%;margin-bottom:8px" onclick="addCart(true)">Купити</button><button class="p" style="width:100%" onclick="addCart(false)">Додати в кошик</button>`}`}
- if(modal.t==='cart'){const c=calc();
-  h=`<h2 style="margin-top:0">Кошик</h2>`+(c.L.length?c.L.map(lineH).join('')
+  ${S.length>1?`<label>Розмір</label><div class="sz">${S.map(s=>`<button class="${modal.size===s?'on':''}" data-v="${esc(s)}" onclick="pickSize(this.dataset.v)">${esc(s)}</button>`).join('')}</div>`:S.length===1?`<p><label>Розмір:</label> <b>${esc(S[0])}</b></p>`:''}
+  ${p.sold?'<button disabled style="width:100%">Продано</button>':isRes(p)?'<button disabled style="width:100%">Заброньовано</button>':`${orderBtn('addCart(true)')}<button class="g" style="width:100%;margin-top:8px" onclick="addCart(false)">Додати в кошик</button>`}
+  ${tgBtn(p.id)}`}
+ if(modal.t==='cart'){ti='Кошик';const c=calc();
+  h=(c.L.length?c.L.map(lineH).join('')
    +(D.s.p3on&&c.n%3===2?`<div class="ok">🎁 Додайте ще одну річ — і будь-яка третя вартістю до ${money(D.s.p3max)} буде безкоштовною!</div>`:'')
    +(c.gift?`<div>🎁 Подарунок: −${money(c.gift)}</div>`:'')
-   +`<h3>Разом: <span class="pr">${money(c.total)}</span></h3>${D.s.fsOn?'<small style="color:var(--mut)">🚚 Безкоштовна доставка при повній передоплаті</small><br><br>':''}<button class="p" style="width:100%" onclick="modal={t:'co'};render()">Оформити замовлення</button>`:'<p>Кошик порожній</p>')}
- if(modal.t==='co'){const c=calc(),pre=modal.pay!=='cod',fs0=D.s.fsOn&&pre;
-  h=`<h2 style="margin-top:0">Оформлення</h2><div class="box">${c.L.map(l=>`<div class="row"><span style="flex:3">${esc(l.p.n)}${l.size?', '+esc(l.size):''} × ${l.q}</span><span style="flex:2;text-align:right">${money(l.price*l.q)}</span></div>${l.fq?`<small style="color:#2e9e5b">🎁 безкоштовно × ${l.fq}</small>`:''}`).join('')}
+   +`<h3>Разом: <span class="pr">${money(c.total)}</span></h3>${D.s.fsOn?'<small style="color:var(--mut)">🚚 Безкоштовна доставка</small><br><br>':''}${me?'':`<div class="hint">Щоб кошик зберігався, <a style="text-decoration:underline;cursor:pointer" onclick="modal={t:'auth',back:modal};render()">увійдіть у профіль</a>.</div>`}${orderBtn("openCo()")}`:'<p>Кошик порожній</p>')+tgBtn()}
+ if(modal.t==='co'){ti='Оформлення';const c=calc(),pre=modal.pay!=='cod',fs0=D.s.fsOn&&pre;
+  h=`<div class="box">${c.L.map(l=>`<div class="row"><span style="flex:3">${esc(l.p.n)}${l.size?', '+esc(l.size):''} × ${l.q}</span><span style="flex:2;text-align:right">${money(l.price*l.q)}</span></div>${l.fq?`<small style="color:#2e9e5b">🎁 безкоштовно × ${l.fq}</small>`:''}`).join('')}
   ${c.gift?`<div class="row"><span>Подарунок</span><span style="text-align:right">−${money(c.gift)}</span></div>`:''}
-  <div class="row"><span>Доставка</span><span style="text-align:right">${fs0?'безкоштовно 🎁':'за тарифами перевізника'}</span></div>
+  <div class="row"><span>Доставка</span><span style="text-align:right">${fs0?'безкоштовна доставка 🎁':'за тарифами перевізника'}</span></div>
   <h3 style="margin:8px 0 0">Разом: <span class="pr">${money(c.total)}</span></h3></div>
-  <label>Спосіб оплати</label><div class="chips"><button class="${pre?'on':''}" onclick="modal.pay='pre';render()">Повна передоплата${D.s.fsOn?' · доставка безкоштовна 🎁':''}</button><button class="${pre?'':'on'}" onclick="modal.pay='cod';render()">Накладений платіж</button></div>
+  ${me?'':`<div class="hint">💡 <a style="text-decoration:underline;cursor:pointer" onclick="modal={t:'auth',back:modal};render()">Створіть профіль</a> — і ці дані підставлятимуться самі.</div>`}
+  <label>Спосіб оплати</label><div class="chips"><button class="${pre?'on':''}" onclick="modal.pay='pre';render()">Повна передоплата${D.s.fsOn?' · безкоштовна доставка 🎁':''}</button><button class="${pre?'':'on'}" onclick="modal.pay='cod';render()">Накладений платіж</button></div>
   ${pre?`<div class="box"><div>1. Переведіть <b class="pr">${money(c.total)}</b> на картку:</div><div class="card">${esc(D.s.card)||'(номер картки не вказано)'}</div><small>${esc(D.s.holder)}</small><br><button onclick="copyCard()">Скопіювати номер</button></div>`:`<div class="box">Оплата при отриманні. Доставку ви оплачуєте за тарифами перевізника.</div>`}
   <div>${pre?'2':'1'}. Дані для відправлення:</div>
   <label>Ім’я та прізвище</label><input oninput="fs(1,this.value)" value="${fv(1)}" autocomplete="name"><label>Телефон</label><input oninput="fs(2,this.value)" value="${fv(2)}" type="tel" autocomplete="tel"><label>Доставка</label><select onchange="fs(3,this.value)"><option${(modal.f&&modal.f[3])==='Укрпошта'?'':' selected'}>Нова пошта</option><option${(modal.f&&modal.f[3])==='Укрпошта'?' selected':''}>Укрпошта</option></select>
   <label>Місто</label><input oninput="fs(4,this.value)" value="${fv(4)}"><label>Відділення / індекс / адреса</label><input oninput="fs(5,this.value)" value="${fv(5)}"><label>Ваш Telegram (тег)</label><input oninput="fs(6,this.value)" value="${fv(6)}" placeholder="@username" autocapitalize="none"><label>Коментар</label><textarea oninput="fs(7,this.value)" rows="2">${fv(7)}</textarea>
-  <button class="p" style="width:100%" onclick="send()">${pre?'3':'2'}. Надіслати замовлення продавцю в Telegram</button>`}
- if(modal.t==='done')h=`<h2 style="margin-top:0">Майже готово ✅</h2><p>Відкрився Telegram із готовим повідомленням. Натисніть «Надіслати» в чаті з продавцем. Товари заброньовано за вами. Якщо чат не відкрився, скопіюйте замовлення й надішліть вручну:</p><textarea rows="8" readonly>${esc(modal.txt)}</textarea><button onclick="copyTxt()">Скопіювати</button>`;
- return`<div class="ov" onclick="if(event.target===this){modal=null;render()}"><div class="md">${h}<br><button style="width:100%;margin-top:8px" onclick="modal=null;render()">Закрити</button></div></div>`}
-function pickSize(i){modal.size=prod(modal.id).sz[i];render()}
+  <button class="w" style="width:100%" onclick="send()">${pre?'3':'2'}. Надіслати замовлення продавцю в Telegram</button>`}
+ if(modal.t==='done'){ti='Майже готово ✅';h=`<p>Відкрився Telegram із готовим повідомленням. Натисніть «Надіслати» в чаті з продавцем. Товари заброньовано за вами. Якщо чат не відкрився, скопіюйте замовлення й надішліть вручну:</p><textarea rows="8" readonly>${esc(modal.txt)}</textarea><button onclick="copyTxt()">Скопіювати</button>`}
+ if(modal.t==='ed'){const p=prod(modal.id);if(!p||!admin){modal=null;return''}ti=p.n||'Новий товар';h=edV(p)}
+ return`<div class="ov" onclick="if(event.target===this)closeM()"><div class="md" data-t="${modal.t}"><div class="mh"><button class="cl" onclick="closeM()" aria-label="Закрити">✕</button><b>${esc(ti)}</b></div><div class="mb">${h}</div></div></div>`}
+function pickSize(v){modal.size=v;document.querySelectorAll('.sz button').forEach(b=>b.classList.toggle('on',b.dataset.v===v))}
 function copy(t){try{navigator.clipboard.writeText(t).then(()=>status('Скопійовано'),()=>status('Не вдалося скопіювати',1))}catch(e){status('Не вдалося скопіювати',1)}}
 function copyCard(){copy((D.s.card||'').replace(/\s/g,''))}
 function copyTxt(){copy(modal.txt)}
@@ -295,9 +378,9 @@ function addCart(go){const p=prod(modal.id);if(!avail(p)){status('Цей тов�
  const sz=p.sz.length===1?p.sz[0]:modal.size;           // якщо розмір один — обирати не потрібно
  if(p.sz.length>1&&!sz){status('Оберіть розмір',1);return}
  const f=cart.find(i=>i.id===p.id&&i.size===(sz||null));f?f.q++:cart.push({id:p.id,size:sz||null,q:1});
- if(go)modal={t:'co'};else{modal=null;status('Додано в кошик ✓')}
- render()}
-function qty(n,d){cart[n].q+=d;if(cart[n].q<1)cart.splice(n,1);render()}
+ saveU();
+ if(go)openCo();else{modal=null;status('Додано в кошик ✓');render()}}
+function qty(n,d){cart[n].q+=d;if(cart[n].q<1)cart.splice(n,1);saveU();render()}
 async function send(){if(busy)return;const f=modal.f||{},v=i=>(f[i]||'').trim(),pre=modal.pay!=='cod';
  if(!v(1)||!v(2)||!v(4)||!v(5)||!v(6)){alert('Заповніть ім’я, телефон, місто, відділення та Telegram');return}
  if(!D.s.tg){alert('Продавець ще не вказав Telegram');return}
@@ -318,67 +401,156 @@ async function send(){if(busy)return;const f=modal.f||{},v=i=>(f[i]||'').trim(),
  const c=calc(),cur=D.s.cur;
  const txt=`🛍 Нове замовлення\n`+c.L.map((l,n)=>`${n+1}) ${l.p.n}${l.size?', розмір '+l.size:''} × ${l.q} — ${l.price*l.q} ${cur}${l.fq?' (🎁 безкоштовно × '+l.fq+')':''}`).join('\n')
   +`\nРазом: ${c.total} ${cur}\n\nІм’я: ${v(1)}\nТелефон: ${v(2)}\nДоставка: ${f[3]||'Нова пошта'}, ${v(4)}, ${v(5)}\nTelegram: ${v(6)}${v(7)?'\nКоментар: '+v(7):''}\n`
-  +(pre?'Оплата: повна передоплата на картку'+(D.s.fsOn?' (доставка безкоштовна)':''):'Оплата: накладений платіж (доставка за тарифами перевізника)');
+  +(pre?'Оплата: повна передоплата на картку'+(D.s.fsOn?' (безкоштовна доставка)':''):'Оплата: накладений платіж (доставка за тарифами перевізника)');
  const url='https://t.me/'+D.s.tg.replace('@','')+'?text='+encodeURIComponent(txt);
- cart=[];modal={t:'done',txt};render();
+ cart=[];saveU();modal={t:'done',txt};render();
  location.href=url}
 
-/* ---------- оновлення броней у реальному часі ---------- */
+/* ---------- профіль користувача: кошик, обране, шаблон ---------- */
+let me=null;                                               // {id,h,t,tpl}
+const uk=id=>id.replace(/\./g,',');                        // Firebase не дозволяє крапку в ключі
+const hu=(id,pw)=>sha256('user|'+id+'|'+pw);
+async function uLoad(id){if(base())return await cget('/users/'+uk(id));const t=LS.get('u_'+id);return t?JSON.parse(t):null}
+let uT;
+function saveU(now){if(!me)return;clearTimeout(uT);
+ uT=setTimeout(async()=>{if(!me)return;const rec={h:me.h,t:me.t||0,cart:cart.map(i=>({id:i.id,size:i.size||'',q:i.q})),tpl:me.tpl||{}};
+  LS.set('u_'+me.id,JSON.stringify(rec));
+  if(base()){try{await cput('/users/'+uk(me.id),rec)}catch(e){status('Не вдалося зберегти профіль у хмарі',1)}}},now?0:600)}
+function mergeCart(list){list.forEach(i=>{if(!i||!i.id)return;const sz=i.size||null,q=+i.q||1,f=cart.find(c=>c.id===i.id&&c.size===sz);f?f.q=Math.max(f.q,q):cart.push({id:i.id,size:sz,q})})}
+async function restoreMe(){const id=LS.get('me'),h=LS.get('meh');if(!id||!h)return;
+ const set=rec=>{me={id,h,t:rec.t||0,tpl:Object.assign({},rec.tpl||{})};mergeCart(arr(rec.cart))};
+ try{const rec=await uLoad(id);if(rec&&rec.h===h)set(rec);else{LS.del('me');LS.del('meh')}}
+ catch(e){try{const rec=JSON.parse(LS.get('u_'+id)||'null');if(rec&&rec.h===h)set(rec)}catch(e2){}}}
+function openMe(){modal=me?{t:'me'}:{t:'auth',back:modal};render()}
+async function doAuth(){if(authB)return;
+ const id=document.getElementById('al').value.trim().toLowerCase(),pw=document.getElementById('ap').value,reg=!!modal.reg;
+ if(!/^[a-z0-9._-]{3,20}$/.test(id)){status('Логін: 3–20 символів, латиниця, цифри, . _ або -',1);return}
+ if(pw.length<6){status('Пароль — мінімум 6 символів',1);return}
+ authB=true;
+ try{const rec=await uLoad(id),h=hu(id,pw);
+  if(reg){if(rec){status('Такий логін уже зайнятий',1);authB=false;return}me={id,h,t:Date.now(),tpl:{}}}
+  else{if(!rec||rec.h!==h){status('Невірний логін або пароль',1);authB=false;return}
+   me={id,h,t:rec.t||0,tpl:Object.assign({},rec.tpl||{})};mergeCart(arr(rec.cart))}
+  LS.set('me',id);LS.set('meh',h);authB=false;saveU(1);
+  const fav=modal.fav;modal=modal.back||null;status(reg?'Профіль створено ✓':'Ви увійшли ✓');render();
+  if(fav&&prod(fav)&&!isFav(fav))toggleFav(fav)
+ }catch(e){authB=false;status('Не вдалося зв’язатися із сервером',1)}}
+function logoutU(){me=null;LS.del('me');LS.del('meh');cart=[];modal=null;status('Ви вийшли з профілю');render()}
+async function delMe(){if(!me)return;
+ const pw=prompt('Щоб видалити профіль, введіть пароль. Кошик, обране й шаблон буде видалено назавжди.');if(pw===null)return;
+ if(hu(me.id,pw)!==me.h){status('Невірний пароль',1);return}
+ const k='u_'+uk(me.id),id=me.id;
+ try{if(base()){for(const pid of Object.keys(D.fv||{}))if(D.fv[pid][k])await cdel('/shop/fv/'+pid+'/'+k);await cdel('/users/'+uk(id))}}
+ catch(e){status('Не вдалося видалити профіль у хмарі. Спробуйте ще раз',1);return}
+ Object.keys(D.fv||{}).forEach(pid=>{delete D.fv[pid][k];if(!Object.keys(D.fv[pid]).length)delete D.fv[pid]});
+ LS.del('u_'+id);idbSet(D);me=null;LS.del('me');LS.del('meh');cart=[];modal=null;status('Профіль видалено');render()}
+function tp(k,v){if(me){me.tpl=me.tpl||{};me.tpl[k]=v}}
+function saveTpl(){saveU(1);status('Шаблон збережено ✓')}
+async function toggleFav(id){
+ if(!me){modal={t:'auth',back:modal,note:'Увійдіть або створіть профіль, щоб додавати товари в обране',fav:id};render();return}
+ const k='u_'+uk(me.id),on=!isFav(id);D.fv=D.fv||{};
+ if(on){(D.fv[id]=D.fv[id]||{})[k]=1}else if(D.fv[id]){delete D.fv[id][k];if(!Object.keys(D.fv[id]).length)delete D.fv[id]}
+ idbSet(D);render();
+ if(base()){try{if(on)await cput('/shop/fv/'+id+'/'+k,1);else await cdel('/shop/fv/'+id+'/'+k)}catch(e){status('Не вдалося зберегти обране в хмарі',1)}}}
+
+/* ---------- оновлення броней і обраного в реальному часі ---------- */
 async function poll(){if(!base()||document.hidden||busy)return;
- try{const r=norm({r:await cget('/shop/r')}).r;
-  if(JSON.stringify(r)!==JSON.stringify(D.r)){D.r=r;idbSet(D);if(!isTyping())render()}}catch(e){}}
+ try{const [r0,f0]=await Promise.all([cget('/shop/r'),cget('/shop/fv')]),r=norm({r:r0}).r,f=normFv(f0);
+  if(JSON.stringify(r)!==JSON.stringify(D.r)||JSON.stringify(f)!==JSON.stringify(D.fv)){D.r=r;D.fv=f;idbSet(D);if(!isTyping())render()}}catch(e){}}
 setInterval(poll,15000);
 
 /* ---------- адмінка ---------- */
 function setS(k,v){D.s[k]=v;mark('s')}
 function setCats(v){D.s.cats=v.split(',').map(s=>s.trim()).filter(Boolean);mark('s')}
 function upd(id,k,v){prod(id)[k]=v;mark('p',id)}
-function updSz(id,v){upd(id,'sz',v.split(',').map(s=>s.trim()).filter(Boolean))}
+function updSz(id,v){upd(id,'sz',[...new Set(v.split(',').map(s=>s.trim()).filter(Boolean))].sort(cmpSz));render()}
+function togSz(id,s){const p=prod(id),i=p.sz.indexOf(s);i>=0?p.sz.splice(i,1):p.sz.push(s);p.sz.sort(cmpSz);mark('p',id);render()}
+function setKind(id,v){const p=prod(id);p.kind=v;if(v==='s'&&!p.cat&&D.s.cats.includes('Взуття'))p.cat='Взуття';mark('p',id);render()}
 const opts=(list,cur)=>list.map(([v,l])=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(l)}</option>`).join('');
-function adminV(){
- const cl=base();
- let h=cl?`<div class="ok">☁ Хмару підключено: зміни зберігаються автоматично й одразу видні всім за посиланням.</div>`
-  :`<div class="warn">⚠ Хмару не підключено: правки зберігаються лише на цьому пристрої, покупці їх не побачать (і броні теж не працюватимуть для інших). Підключіть хмару у вкладці «Налаштування».</div>`;
- h+=`<div class="tabs"><button class="${tab==='p'?'on':''}" onclick="tab='p';render()">Товари</button><button class="${tab==='s'?'on':''}" onclick="tab='s';render()">Налаштування</button></div>`;
- if(tab==='s'){
-  const f=(k,l)=>`<label>${l}</label><input value="${esc(D.s[k])}" onchange="setS('${k}',this.value)">`;
-  h+=f('name','Назва магазину')+`<div class="box"><b>🖼 Логотип</b>${D.s.logo?`<img src="${D.s.logo}" style="height:48px;display:block;margin:8px 0" alt="">`:''}<label style="display:block;margin-top:6px">Завантажте логотип — він з’явиться ліворуч від назви</label><input type="file" accept="image/*" onchange="addLogo(this.files[0])">${D.s.logo?`<button class="d" onclick="setS('logo','');render()">Прибрати логотип</button>`:''}</div>`
-   +`<label>Колір сайту</label><input type="color" value="${esc(D.s.color)}" oninput="setS('color',this.value)" style="height:46px;padding:4px">`
-   +f('about','Опис під назвою')+f('tg','Ваш Telegram (без @), куди надходять замовлення')+f('card','Номер картки для оплати')+f('holder','Отримувач (ім’я на картці)')+f('cur','Валюта')
-   +`<label>Типи одягу для фільтра (через кому)</label><input value="${esc(D.s.cats.join(', '))}" onchange="setCats(this.value)">`
-   +`<div class="box"><b>🎁 Акції</b><label style="display:block;margin:10px 0 6px"><input type="checkbox" ${D.s.p3on?'checked':''} onchange="setS('p3on',this.checked)">Третя річ у подарунок при купівлі двох</label><label>Максимальна ціна подарункової речі</label><input type="number" inputmode="decimal" value="${D.s.p3max}" onchange="setS('p3max',+this.value||0)"><label style="display:block"><input type="checkbox" ${D.s.fsOn?'checked':''} onchange="setS('fsOn',this.checked)">Безкоштовна доставка при повній передоплаті</label></div>`
-   +`<div class="box"><b>☁ Хмара (щоб зміни були видні всім)</b>
+const ago=ts=>{const m=Math.max(0,Math.round((Date.now()-ts)/60000));return m<60?m+' хв тому':m<1440?Math.round(m/60)+' год тому':Math.round(m/1440)+' дн тому'};
+const hint=t=>`<div class="hint">${t}</div>`;
+function openEd(id){modal={t:'ed',id};render()}
+function agridH(){const q=AQ.trim().toLowerCase(),l=D.p.filter(p=>!q||p.n.toLowerCase().includes(q));
+ return l.length?`<div class="grid">${l.map(p=>cardH(p,1)).join('')}</div>`:'<p class="hint">Нічого не знайдено за цією назвою.</p>'}
+function updAGrid(){const g=document.getElementById('agl');if(g){g.innerHTML=agridH();tick()}}
+function resV(){const l=D.p.filter(isRes).sort((a,b)=>D.r[b.id]-D.r[a.id]);
+ return hint('Тут товари, які покупці забронювали, оформивши замовлення. Контакти покупця приходять вам у Telegram. Якщо товар продано — натисніть «Продано», якщо покупець передумав — «Зняти бронь».')
+ +(l.length?l.map(p=>`<div class="box"><div class="row" style="align-items:flex-start;cursor:pointer" onclick="openEd('${p.id}')"><img src="${p.im[0]||''}" alt="" style="flex:none;width:56px;height:72px;object-fit:cover;border-radius:8px;background:var(--bd)"><div style="flex:1"><b style="margin:0">${esc(p.n)}</b>${priceH(p)}<br><small style="color:var(--mut)">${szl(p).length?'Розміри: '+esc(szl(p).join(', '))+'<br>':''}Заброньовано ${ago(D.r[p.id])} · ${new Date(D.r[p.id]).toLocaleString('uk-UA')}</small></div></div>
+  <div class="row" style="margin-top:8px"><button onclick="setRes('${p.id}',false);render()">Зняти бронь</button><button class="p" onclick="sellRes('${p.id}')">Продано</button></div></div>`).join(''):'<div class="box">Заброньованих товарів зараз немає.</div>')}
+function sellRes(id){prod(id).sold=true;mark('p',id);setRes(id,false);render()}
+function applyAll(){const pct=+document.getElementById('gpct').value,e=document.getElementById('gend').value,end=e?new Date(e).getTime():0;
+ if(!(pct>=1&&pct<=99)){status('Вкажіть знижку від 1 до 99 %',1);return}
+ if(end&&end<=Date.now()){status('Дата закінчення вже минула',1);return}
+ if(!confirm('Застосувати знижку −'+pct+'% до всіх товарів ('+D.p.length+')? Уже встановлені знижки на окремих товарах буде замінено.'))return;
+ D.p.forEach(p=>{if(p.pr>0){const s=Math.max(1,Math.round(p.pr*(1-pct/100)));p.sp=s<p.pr?s:0;p.se=p.sp?end:0}mark('p',p.id)});
+ render();status('Знижку −'+pct+'% застосовано до всіх товарів ✓')}
+function clearAll(){if(!confirm('Прибрати знижки з усіх товарів?'))return;D.p.forEach(p=>{p.sp=0;p.se=0;mark('p',p.id)});render();status('Знижки прибрано ✓')}
+function discV(){const n=D.p.filter(isSale).length;
+ return`<div class="box"><b>🏷 Знижка на всі товари одразу</b>${hint('Введіть відсоток — ціни всіх товарів зменшаться автоматично. Знижку на один товар можна задати у вікні цього товару (вкладка «Товари»).')}
+  <div class="row"><div><label>Знижка, %</label><input id="gpct" type="number" inputmode="decimal" min="1" max="99" placeholder="напр. 20"></div><div><label>Діє до (необов’язково)</label><input id="gend" type="datetime-local"></div></div>
+  <button class="p" style="width:100%" onclick="applyAll()">Застосувати до всіх товарів</button>
+  <button class="d" style="width:100%;margin-top:8px" onclick="clearAll()">Прибрати знижки з усіх товарів</button>
+  <small style="color:var(--mut)">Зараз зі знижкою: ${n} з ${D.p.length}</small></div>
+ <div class="box"><b>🎁 Акції</b>
+  <label style="display:block;margin:10px 0 6px"><input type="checkbox" ${D.s.p3on?'checked':''} onchange="setS('p3on',this.checked)">Третя річ у подарунок при купівлі двох</label>
+  <label>Максимальна ціна подарункової речі</label><input type="number" inputmode="decimal" value="${D.s.p3max}" onchange="setS('p3max',+this.value||0)">
+  <label style="display:block"><input type="checkbox" ${D.s.fsOn?'checked':''} onchange="setS('fsOn',this.checked)">Безкоштовна доставка (при повній передоплаті)</label></div>`}
+function setV(){
+ const f=(k,l,h)=>`<label>${l}</label><input value="${esc(D.s[k])}" onchange="setS('${k}',this.value)">${h?hint(h):''}`;
+ return`<div class="box"><b>🏪 Магазин</b>${f('name','Назва магазину')}${f('about','Опис під назвою')}
+  <label>Колір сайту</label><input type="color" value="${esc(D.s.color)}" oninput="setS('color',this.value)" style="height:46px;padding:4px">
+  <label>Логотип</label>${D.s.logo?`<img src="${D.s.logo}" style="height:48px;display:block;margin:8px 0" alt="">`:''}<input type="file" accept="image/*" onchange="addLogo(this.files[0])">${hint('Логотип з’явиться ліворуч від назви.')}${D.s.logo?`<button class="d" onclick="setS('logo','');render()">Прибрати логотип</button>`:''}</div>
+  <div class="box"><b>📨 Замовлення й оплата</b>${f('tg','Ваш Telegram (без @)','Сюди надходитимуть замовлення, а кнопка «Написати продавцю» відкриватиме чат із вами.')}${f('card','Номер картки для оплати')}${f('holder','Отримувач (ім’я на картці)')}${f('cur','Валюта')}</div>
+  <div class="box"><b>👕 Типи одягу для фільтра</b><label>Через кому</label><input value="${esc(D.s.cats.join(', '))}" onchange="setCats(this.value)"></div>
+  <div class="box"><b>☁ Хмара (щоб зміни були видні всім)</b>
    <ol style="font-size:14px"><li>Зайдіть на <b>console.firebase.google.com</b> → створіть проєкт (безкоштовно).</li><li>Build → <b>Realtime Database</b> → Create database → режим <b>test mode</b> (або в Rules поставте <code>{"rules":{".read":true,".write":true}}</code>).</li><li>Скопіюйте адресу бази виду <code>https://назва-default-rtdb.firebaseio.com</code> і вставте нижче.</li></ol>
    <label>Адреса бази</label><input id="dburl" value="${esc(LS.get('dburl')||DB_URL)}" placeholder="https://...firebaseio.com" autocapitalize="none">
    <div class="row"><button class="p" onclick="connect()">Підключити й перевірити</button><button onclick="dlFile()">⬇ Завантажити файл із підключенням</button></div>
-   <small style="color:var(--mut)">Після підключення завантажте файл і викладіть його на хостинг. Цей файл і буде вашим сайтом та адмінкою.</small></div>`
-   +`<div class="box"><b>🔑 Змінити пароль</b><label>Поточний пароль</label><input id="pw0" type="password"><label>Новий пароль (мінімум 6 символів)</label><input id="pw1" type="password"><label>Повторіть новий пароль</label><input id="pw2" type="password"><button onclick="chpw()">Змінити пароль</button></div>
-   <button class="d" style="width:100%" onclick="logout()">Вийти з адмінки</button>`}
- else{
-  const cats=[['','— не вказано —'],...D.s.cats.map(c=>[c,c])];
-  h+=`<button class="p" style="width:100%" onclick="newP()">+ Додати товар</button>`+D.p.map(p=>{
-   const cs=p.cat&&!D.s.cats.includes(p.cat)?[...cats,[p.cat,p.cat]]:cats;
-   const sale=p.sp>0?(p.sp<p.pr?(isSale(p)?`Знижка −${Math.round((1-p.sp/p.pr)*100)}% діє зараз`:'Термін знижки минув — вона не діє'):'<span style="color:#d33">Ціна зі знижкою має бути меншою за звичайну</span>'):'';
-   return`<div class="box"><div class="row"><div><label>Назва</label><input value="${esc(p.n)}" onchange="upd('${p.id}','n',this.value)"></div><div><label>Ціна</label><input type="number" inputmode="decimal" value="${p.pr}" onchange="upd('${p.id}','pr',+this.value)"></div></div>
-  <div class="row"><div><label>Ціна зі знижкою (необов’язково)</label><input type="number" inputmode="decimal" value="${p.sp||''}" placeholder="без знижки" onchange="upd('${p.id}','sp',+this.value||0)"></div><div><label>Знижка діє до (необов’язково)</label><input type="datetime-local" value="${p.se?locIn(p.se):''}" onchange="upd('${p.id}','se',this.value?new Date(this.value).getTime():0)"></div></div>
-  <small style="color:var(--mut)">Порожня дата — знижка діє без таймера. ${sale}</small>${p.se?`<br><button style="min-height:36px;margin:6px 0" onclick="upd('${p.id}','se',0);render()">Прибрати таймер</button>`:''}
-  <div class="row" style="margin-top:8px"><div><label>Стать</label><select onchange="upd('${p.id}','g',this.value)">${opts([['','— не вказано —'],...GEN],p.g)}</select></div><div><label>Тип одягу</label><select onchange="upd('${p.id}','cat',this.value)">${opts(cs,p.cat)}</select></div><div><label>Стан</label><select onchange="upd('${p.id}','cond',this.value)">${opts([['','— не вказано —'],...COND],p.cond)}</select></div></div>
-  <label>Опис</label><textarea rows="3" onchange="upd('${p.id}','d',this.value)">${esc(p.d)}</textarea>
-  <label>Розміри через кому (S, M, L)</label><input value="${esc(p.sz.join(', '))}" onchange="updSz('${p.id}',this.value)">
-  <div>${p.im.map((s,i)=>`<span class="x"><img src="${s}" style="width:64px;height:64px;object-fit:cover;border-radius:8px" alt=""><button onclick="delImg('${p.id}',${i})">×</button></span>`).join('')}</div>
-  <label>Додати фото</label><input type="file" accept="image/*" multiple onchange="addImg('${p.id}',this.files)">
-  <div class="row"><button onclick="setRes('${p.id}',${!isRes(p)});render()">${isRes(p)?'Зняти бронь':'Забронювати'}</button><button onclick="toggleSold('${p.id}')">${p.sold?'Повернути в продаж':'Позначити «Продано»'}</button></div>
-  ${isRes(p)?`<small style="color:var(--mut)">Заброньовано: ${new Date(D.r[p.id]).toLocaleString('uk-UA')}</small><br>`:''}
-  <button class="d" style="width:100%;margin-top:8px" onclick="delP('${p.id}')">Видалити</button></div>`}).join('')}
- return h}
-function newP(){D.p.unshift({id:'p'+Date.now(),t:Date.now(),n:'Новий товар',pr:0,d:'',sz:['S','M','L'],im:[],sold:false,g:'u',cat:D.s.cats[0]||'',cond:'new',sp:0,se:0});mark('p',D.p[0].id);render()}
+   <small style="color:var(--mut)">Після підключення завантажте файл і викладіть його на хостинг. Цей файл і буде вашим сайтом та адмінкою.</small></div>
+  <div class="box"><b>🔑 Змінити пароль</b><label>Поточний пароль</label><input id="pw0" type="password"><label>Новий пароль (мінімум 6 символів)</label><input id="pw1" type="password"><label>Повторіть новий пароль</label><input id="pw2" type="password"><button onclick="chpw()">Змінити пароль</button></div>
+  <button class="d" style="width:100%" onclick="logout()">Вийти з адмінки</button>`}
+function adminV(){
+ const cl=base(),nr=D.p.filter(isRes).length;
+ let h=cl?`<div class="ok">☁ Хмару підключено: зміни зберігаються автоматично й одразу видні всім за посиланням.</div>`
+  :`<div class="warn">⚠ Хмару не підключено: правки зберігаються лише на цьому пристрої, покупці їх не побачать (і броні теж не працюватимуть для інших). Підключіть хмару у вкладці «Налаштування».</div>`;
+ const tb=(k,t)=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()">${t}</button>`;
+ h+=`<div class="tabs g4">${tb('p','📦 Товари')}${tb('r','🔒 Броні'+(nr?' ('+nr+')':''))}${tb('d','🏷 Знижки')}${tb('s','⚙ Налаштування')}</div>`;
+ if(tab==='s')return h+setV();
+ if(tab==='d')return h+discV();
+ if(tab==='r')return h+resV();
+ return h+`<div class="row" style="margin-bottom:6px"><input id="aq" placeholder="🔍 Пошук товару за назвою" value="${esc(AQ)}" oninput="AQ=this.value;updAGrid()" style="margin:0"><button class="p" style="flex:none" onclick="newP()">+ Додати товар</button></div>
+  ${hint('Натисніть на товар, щоб змінити його: назву, ціну, фото, розміри, бронь.')}<div id="agl">${D.p.length?agridH():'<p>Товарів поки немає. Натисніть «+ Додати товар».</p>'}</div>`}
+function edV(p){
+ const cats=[['','— не вказано —'],...D.s.cats.map(c=>[c,c])],cs=p.cat&&!D.s.cats.includes(p.cat)?[...cats,[p.cat,p.cat]]:cats;
+ const sale=p.sp>0?(p.sp<p.pr?(isSale(p)?`Знижка −${Math.round((1-p.sp/p.pr)*100)}% діє зараз`:'Термін знижки минув — вона не діє'):'<span style="color:#d33">Ціна зі знижкою має бути меншою за звичайну</span>'):'',
+  SL=p.kind==='s'?SHOES:CLOTH,id=p.id,n=favN(id);
+ return`<div class="box"><b>📝 Основне</b>
+  <label>Назва</label><input value="${esc(p.n)}" onchange="upd('${id}','n',this.value)">
+  <label>Опис</label><textarea rows="3" onchange="upd('${id}','d',this.value)">${esc(p.d)}</textarea>
+  <div class="row"><div><label>Це</label><select onchange="setKind('${id}',this.value)">${opts([['c','Одяг'],['s','Взуття']],p.kind==='s'?'s':'c')}</select></div><div><label>Тип</label><select onchange="upd('${id}','cat',this.value)">${opts(cs,p.cat)}</select></div></div>
+  <div class="row"><div><label>Стать</label><select onchange="upd('${id}','g',this.value)">${opts([['','— не вказано —'],...GEN],p.g)}</select></div><div><label>Стан</label><select onchange="upd('${id}','cond',this.value)">${opts([['','— не вказано —'],...COND],p.cond)}</select></div></div></div>
+ <div class="box"><b>💰 Ціна</b>
+  <div class="row"><div><label>Ціна</label><input type="number" inputmode="decimal" value="${p.pr}" onchange="upd('${id}','pr',+this.value)"></div><div><label>Ціна зі знижкою</label><input type="number" inputmode="decimal" value="${p.sp||''}" placeholder="без знижки" onchange="upd('${id}','sp',+this.value||0)"></div></div>
+  <label>Знижка діє до (необов’язково)</label><input type="datetime-local" value="${p.se?locIn(p.se):''}" onchange="upd('${id}','se',this.value?new Date(this.value).getTime():0)">
+  <small style="color:var(--mut)">Порожня дата — знижка діє без таймера. ${sale}</small>${p.se?`<br><button style="min-height:36px;margin:6px 0" onclick="upd('${id}','se',0);render()">Прибрати таймер</button>`:''}</div>
+ <div class="box"><b>📏 Розміри</b>${hint('Натискайте на розміри, які є в наявності.')}
+  <div class="chips">${SL.map(s=>`<button class="${p.sz.includes(s)?'on':''}" data-v="${s}" onclick="togSz('${id}',this.dataset.v)">${s}</button>`).join('')}</div>
+  <label>Усі розміри через кому (можна дописати свій)</label><input value="${esc(p.sz.join(', '))}" onchange="updSz('${id}',this.value)"></div>
+ <div class="box"><b>📷 Фото</b>
+  <div>${p.im.map((s,i)=>`<span class="x"><img src="${s}" style="width:64px;height:64px;object-fit:cover;border-radius:8px" alt=""><button onclick="delImg('${id}',${i})">×</button></span>`).join('')}</div>
+  <label>Додати фото</label><input type="file" accept="image/*" multiple onchange="addImg('${id}',this.files)"></div>
+ <div class="box"><b>🔒 Статус</b>${hint('В обране додали: '+n+(isRes(p)?'. Заброньовано: '+new Date(D.r[id]).toLocaleString('uk-UA'):''))}
+  <div class="row"><button onclick="setRes('${id}',${!isRes(p)});render()">${isRes(p)?'Зняти бронь':'Забронювати'}</button><button onclick="toggleSold('${id}')">${p.sold?'Повернути в продаж':'Позначити «Продано»'}</button></div></div>
+ <button class="p" style="width:100%" onclick="closeM()">Готово</button>
+ <button class="d" style="width:100%;margin-top:8px" onclick="delP('${id}')">Видалити товар</button>`}
+function newP(){D.p.unshift({id:'p'+Date.now(),t:Date.now(),n:'Новий товар',pr:0,d:'',sz:[],kind:'c',im:[],sold:false,g:'u',cat:D.s.cats[0]||'',cond:'new',sp:0,se:0});mark('p',D.p[0].id);modal={t:'ed',id:D.p[0].id};render()}
 function toggleSold(id){const p=prod(id);p.sold=!p.sold;mark('p',id);render()}
 async function setRes(id,on){if(on)D.r[id]=Date.now();else delete D.r[id];idbSet(D);
  if(!base()){status('Збережено на цьому пристрої');return}
  try{if(on)await cput('/shop/r/'+id,D.r[id]);else await cdel('/shop/r/'+id);status(on?'Забронювано ✓':'Бронь знято ✓')}
  catch(e){status('Не вдалося зберегти бронь у хмарі',1)}}
 function delImg(id,i){prod(id).im.splice(i,1);mark('p',id);render()}
-function delP(id){if(confirm('Видалити товар?')){D.p=D.p.filter(x=>x.id!==id);delete D.r[id];mark('del',id);render()}}
+function delP(id){if(confirm('Видалити товар?')){D.p=D.p.filter(x=>x.id!==id);delete D.r[id];delete D.fv[id];mark('del',id);modal=null;render()}}
 function shrink(file,max,type){return new Promise((r,j)=>{const i=new Image,u=URL.createObjectURL(file);i.onload=()=>{const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(type==='png'?c.toDataURL('image/png'):c.toDataURL('image/jpeg',.75))};i.onerror=()=>j();i.src=u})}
 async function addImg(id,files){status('Завантаження фото…');for(const f of files){try{prod(id).im.push(await shrink(f,1000,'jpeg'))}catch(e){status('Не вдалося прочитати фото',1)}}mark('p',id);render()}
 async function addLogo(f){if(!f)return;try{D.s.logo=await shrink(f,240,'png');mark('s');render()}catch(e){status('Не вдалося прочитати зображення',1)}}

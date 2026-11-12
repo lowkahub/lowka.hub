@@ -84,6 +84,13 @@ button.w small{display:block;font-size:12px;font-weight:400;color:#555}
 .gs img{width:100%;height:100%;object-fit:contain}
 .ga{position:absolute;top:50%;transform:translateY(-50%);width:36px;min-height:36px;height:36px;padding:0;border:none;border-radius:50%;background:#0006;color:#fff;font-size:22px;line-height:1}
 .ga.l{left:8px}.ga.r{right:8px}
+.gs img{cursor:zoom-in}
+#lb{position:fixed;inset:0;z-index:60;background:#000e;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#lb img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;will-change:transform;-webkit-user-drag:none;pointer-events:none}
+#lb button{position:absolute;border:none;background:#0008;color:#fff;border-radius:50%;width:44px;height:44px;min-height:44px;padding:0;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;z-index:2}
+#lb .x{top:max(12px,env(safe-area-inset-top));right:12px}
+#lb .p{left:10px;top:50%;margin-top:-22px}#lb .n{right:10px;top:50%;margin-top:-22px}
+#lb .ct{position:absolute;top:max(22px,calc(env(safe-area-inset-top) + 10px));left:0;right:0;text-align:center;color:#fff;font-size:14px;pointer-events:none;text-shadow:0 0 4px #000}
 .dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:6px;pointer-events:none}
 .dots i{width:7px;height:7px;border-radius:50%;background:#fff7;box-shadow:0 0 2px #0006}.dots i.on{background:#fff}
 .szl{color:var(--mut);font-size:12px;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -167,15 +174,20 @@ function normFv(x){const o={};if(x&&typeof x==='object')Object.keys(x).forEach(p
 /* ---------- локальне сховище (IndexedDB, без ліміту 5 МБ) ---------- */
 const idb=()=>new Promise((res,rej)=>{try{const r=indexedDB.open(NS,1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}catch(e){rej(e)}});
 async function idbGet(){try{const d=await idb();return await new Promise(res=>{const q=d.transaction('k').objectStore('k').get('D');q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)})}catch(e){return null}}
-async function idbSet(v){try{const d=await idb();return await new Promise(res=>{const t=d.transaction('k','readwrite');t.objectStore('k').put(v,'D');t.oncomplete=()=>res();t.onerror=()=>res()})}catch(e){}}
+async function idbSet(v){try{const d=await idb();return await new Promise(res=>{const t=d.transaction('k','readwrite');t.objectStore('k').put(Object.assign({},v,{_v:VER,_rv:RVER}),'D');t.oncomplete=()=>res();t.onerror=()=>res()})}catch(e){}}
 
 /* ---------- хмара (Firebase Realtime Database через звичайний fetch) ---------- */
 let stT;
 function status(t,err){const e=document.getElementById('st');if(!e)return;e.textContent=t;e.className=err?'err':'';e.style.display='block';clearTimeout(stT);stT=setTimeout(()=>e.style.display='none',err?6000:2200)}
-async function cput(path,val){const r=await fetch(base()+path+'.json',{method:'PUT',body:JSON.stringify(val)});if(!r.ok)throw new Error(r.status)}
-async function cdel(path){const r=await fetch(base()+path+'.json',{method:'DELETE'});if(!r.ok)throw new Error(r.status)}
+/* Версії: /shop/v — змінюється при правці каталогу (товари/налаштування), /shop/rv — при зміні броней/обраного.
+   Це кілька байтів: клієнт качає великі дані лише тоді, коли версія відрізняється від збереженої в браузері. */
+let VER=null,RVER=null;
+const RVP=/^\/shop\/(r|fv)(\/|$)/;
+async function bumpRv(){try{await fetch(base()+'/shop/rv.json?print=silent',{method:'PUT',body:JSON.stringify(Date.now())})}catch(e){}}
+async function cput(path,val){const r=await fetch(base()+path+'.json?print=silent',{method:'PUT',body:JSON.stringify(val)});if(!r.ok)throw new Error(r.status);if(RVP.test(path))bumpRv()}
+async function cdel(path){const r=await fetch(base()+path+'.json',{method:'DELETE'});if(!r.ok)throw new Error(r.status);if(RVP.test(path))bumpRv()}
 async function cget(path){const r=await fetch(base()+path+'.json');if(!r.ok)throw new Error(r.status);return r.json()}
-const cloudLoad=()=>cget('/shop');
+async function cloudLoad(){const [s0,p0,r0,f0]=await Promise.all([cget('/shop/s'),cget('/shop/p'),cget('/shop/r'),cget('/shop/fv')]);return{s:s0,p:p0,r:r0,fv:f0}}
 let dS=false,dP=new Set(),dDel=new Set(),tm;
 function mark(kind,id){theme();if(kind==='s')dS=true;else if(kind==='p')dP.add(id);else if(kind==='del'){dP.delete(id);dDel.add(id)}
  LS.set('pending','1');status('Збереження…');clearTimeout(tm);tm=setTimeout(flush,600)}
@@ -187,22 +199,31 @@ async function flush(){
   if(dS){await cput('/shop/s',D.s);dS=false}
   for(const id of [...dP]){const p=prod(id);if(p)await cput('/shop/p/'+id,p);dP.delete(id)}
   for(const id of [...dDel]){await cdel('/shop/p/'+id);await cdel('/shop/r/'+id).catch(()=>{});await cdel('/shop/fv/'+id).catch(()=>{});dDel.delete(id)}
+  const nv=Date.now();await cput('/shop/v',nv);VER=nv;idbSet(D);
   LS.del('pending');status('Збережено ✓')
  }catch(e){status('Не вдалося зберегти в хмару. Перевірте інтернет і налаштування бази',1)}}
 
 /* ---------- вхід ---------- */
 const checkLogin=()=>{loggedIn=LS.get('adm')===curHash()};
 async function init(){
- const l=await idbGet();if(l)D=norm(l);
+ const l=await idbGet();if(l){D=norm(l);VER=l._v!=null?l._v:null;RVER=l._rv!=null?l._rv:null}
  checkLogin();admin=loggedIn;render();
  restoreMe().then(()=>{if(!isTyping())render()});
  if(location.hash==='#admin'&&!loggedIn){modal={t:'login'};render()}
  if(base()){
-  try{const c=await cloudLoad();
-   if(c&&c.s){
-    if(LS.get('pending')==='1'&&LS.get('adm')){const keepR=D.r;markAll();D.r=Object.assign({},norm(c).r,keepR);D.fv=norm(c).fv;flush()}   // були незбережені правки власника
-    else{D=norm(c);idbSet(D)}
-   }else if(LS.get('adm')){markAll();flush()}                        // хмара порожня: заливаємо дані
+  try{
+   const pend=LS.get('pending')==='1'&&!!LS.get('adm');
+   const v=await cget('/shop/v');
+   if(l&&VER!==null&&v!==null&&v===VER&&!pend){          // каталог не змінювався — беремо з кешу, нічого не качаємо
+    await syncR();
+   }else{
+    const rv=await cget('/shop/rv');
+    const c=await cloudLoad();
+    if(c&&c.s){
+     if(pend){const keepR=D.r;markAll();D.r=Object.assign({},norm(c).r,keepR);D.fv=norm(c).fv;flush()}   // були незбережені правки власника
+     else{D=norm(c);VER=v;RVER=rv;idbSet(D);if(v===null){const nv=Date.now();cput('/shop/v',nv).then(()=>{VER=nv;idbSet(D)}).catch(()=>{})}}
+    }else if(LS.get('adm')){markAll();flush()}                        // хмара порожня: заливаємо дані
+   }
    checkLogin();if(!loggedIn)admin=false;render();if(loggedIn)cdRun(1);
   }catch(e){}
  }}
@@ -310,6 +331,39 @@ function closeM(){modal=(modal&&modal.back)||null;render()}
 const TPK=['n','ph','dl','ci','br','tg'];                       // шаблон профілю → поля оформлення 1..6
 function openCo(){const t=(me&&me.tpl)||{},f={};TPK.forEach((k,i)=>{if(t[k])f[i+1]=t[k]});modal={t:'co',f};render()}
 function galS(el){const i=Math.round(el.scrollLeft/Math.max(1,el.clientWidth));if(modal)modal.k=i;el.parentNode.querySelectorAll('.dots i').forEach((d,j)=>d.classList.toggle('on',j===i))}
+/* ---------- перегляд фото з наближенням (щипок, колесо миші, подвійний тап, перетягування) ---------- */
+let LB=null;
+function zoomOpen(id,i){const p=prod(id);if(!p||!p.im.length)return;zoomClose();
+ const el=document.createElement('div');el.id='lb';
+ el.innerHTML='<div class="ct"></div><button class="x" aria-label="Закрити">✕</button>'+(p.im.length>1?'<button class="p" aria-label="Попереднє">‹</button><button class="n" aria-label="Наступне">›</button>':'')+'<img alt="">';
+ document.body.appendChild(el);
+ const img=el.querySelector('img'),ct=el.querySelector('.ct'),ims=p.im.slice();
+ const S={i:Math.min(Math.max(0,i|0),ims.length-1),k:1,x:0,y:0},ptr=new Map();let d0=0,k0=1,tapT=0,tapX=0,tapY=0,mv=0,sx=0;
+ const clamp=()=>{const mx=(S.k-1)*el.clientWidth/2,my=(S.k-1)*el.clientHeight/2;S.x=Math.max(-mx,Math.min(mx,S.x));S.y=Math.max(-my,Math.min(my,S.y));if(S.k<=1){S.x=0;S.y=0}};
+ const draw=(anim)=>{clamp();img.style.transition=anim?'transform .2s':'none';img.style.transform=`translate(${S.x}px,${S.y}px) scale(${S.k})`};
+ const show=n=>{S.i=(n+ims.length)%ims.length;S.k=1;S.x=0;S.y=0;img.src=ims[S.i];ct.textContent=ims.length>1?(S.i+1)+' / '+ims.length:'';draw()};
+ const zoomAt=(k,cx,cy)=>{k=Math.max(1,Math.min(5,k));const r=el.getBoundingClientRect(),ox=cx-r.left-r.width/2,oy=cy-r.top-r.height/2,f=k/S.k;S.x=ox-(ox-S.x)*f;S.y=oy-(oy-S.y)*f;S.k=k;draw()};
+ const dist=()=>{const a=[...ptr.values()];return Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)};
+ const mid=()=>{const a=[...ptr.values()];return{x:(a[0].x+a[1].x)/2,y:(a[0].y+a[1].y)/2}};
+ el.addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON')return;el.setPointerCapture(e.pointerId);ptr.set(e.pointerId,{x:e.clientX,y:e.clientY});mv=0;sx=e.clientX;if(ptr.size===2){d0=dist();k0=S.k}});
+ el.addEventListener('pointermove',e=>{const o=ptr.get(e.pointerId);if(!o)return;const dx=e.clientX-o.x,dy=e.clientY-o.y;o.x=e.clientX;o.y=e.clientY;mv+=Math.abs(dx)+Math.abs(dy);
+  if(ptr.size===2){const m=mid();zoomAt(k0*dist()/d0,m.x,m.y)}
+  else if(S.k>1){S.x+=dx;S.y+=dy;draw()}});
+ const up=e=>{if(!ptr.has(e.pointerId))return;ptr.delete(e.pointerId);
+  if(ptr.size===0){
+   if(S.k<=1.02&&ims.length>1&&mv>30&&Math.abs(e.clientX-sx)>60){show(S.i+(e.clientX<sx?1:-1));return}
+   if(mv<10){const t=Date.now();                                  // подвійний тап
+    if(t-tapT<300&&Math.hypot(e.clientX-tapX,e.clientY-tapY)<30){S.k>1?(S.k=1,draw(1)):zoomAt(2.5,e.clientX,e.clientY);tapT=0}else{tapT=t;tapX=e.clientX;tapY=e.clientY}}
+   if(S.k<1.02){S.k=1;draw(1)}}
+  else if(ptr.size===1&&S.k<1.02){S.k=1;draw(1)}};
+ el.addEventListener('pointerup',up);el.addEventListener('pointercancel',up);
+ el.addEventListener('wheel',e=>{e.preventDefault();zoomAt(S.k*(e.deltaY<0?1.25:0.8),e.clientX,e.clientY)},{passive:false});
+ el.addEventListener('dblclick',e=>e.preventDefault());
+ el.querySelector('.x').onclick=zoomClose;
+ const pb=el.querySelector('.p'),nb=el.querySelector('.n');if(pb){pb.onclick=()=>show(S.i-1);nb.onclick=()=>show(S.i+1)}
+ const key=e=>{if(e.key==='Escape')zoomClose();else if(e.key==='ArrowLeft'&&ims.length>1)show(S.i-1);else if(e.key==='ArrowRight'&&ims.length>1)show(S.i+1)};
+ document.addEventListener('keydown',key);LB={el,key};show(S.i)}
+function zoomClose(){if(!LB)return;document.removeEventListener('keydown',LB.key);LB.el.remove();LB=null}
 function galGo(d){const el=document.getElementById('gs');if(el)el.scrollBy({left:d*el.clientWidth,behavior:'smooth'})}
 function askSeller(id){if(!D.s.tg){alert('Продавець ще не вказав Telegram');return}
  const p=id?prod(id):null;
@@ -342,7 +396,7 @@ function modalV(){if(!modal)return'';let h='',ti='';
   <button class="d" style="width:100%;margin-top:8px" onclick="delMe()">Видалити профіль</button>`}
  if(modal.t==='prod'){const p=prod(modal.id);if(!p){modal=null;return''}
   const meta=[gName(p.g),p.cat,cName(p.cond)].filter(Boolean).join(' · '),n=favN(p.id),S=szl(p),k=modal.k||0;
-  const gal=`<div class="gal"><div class="gs" id="gs" onscroll="galS(this)">${p.im.length?p.im.map(s=>`<div><img src="${s}" alt=""></div>`).join(''):'<div>Немає фото</div>'}</div>${p.im.length>1?`<button class="ga l" onclick="galGo(-1)" aria-label="Попереднє фото">‹</button><button class="ga r" onclick="galGo(1)" aria-label="Наступне фото">›</button><div class="dots">${p.im.map((_,i)=>`<i class="${i===k?'on':''}"></i>`).join('')}</div>`:''}</div>`;
+  const gal=`<div class="gal"><div class="gs" id="gs" onscroll="galS(this)">${p.im.length?p.im.map((s,i)=>`<div><img src="${s}" alt="" onclick="zoomOpen('${p.id}',${i})"></div>`).join(''):'<div>Немає фото</div>'}</div>${p.im.length>1?`<button class="ga l" onclick="galGo(-1)" aria-label="Попереднє фото">‹</button><button class="ga r" onclick="galGo(1)" aria-label="Наступне фото">›</button><div class="dots">${p.im.map((_,i)=>`<i class="${i===k?'on':''}"></i>`).join('')}</div>`:''}</div>`;
   ti=p.n;
   h=`${gal}<h2 style="margin:10px 0 6px">${esc(p.n)}</h2><div style="font-size:18px">${priceH(p)}</div>${tmH(p)}
   <div class="row" style="margin:10px 0"><button class="fb${isFav(p.id)?' on':''}" style="flex:none" onclick="toggleFav('${p.id}')">${isFav(p.id)?'♥ В обраному':'♡ В обране'}</button><span style="color:var(--mut);font-size:13px">Додали в обране: ${n}</span></div>
@@ -454,10 +508,18 @@ async function toggleFav(id){
  if(base()){try{if(on)await cput('/shop/fv/'+id+'/'+k,1);else await cdel('/shop/fv/'+id+'/'+k)}catch(e){status('Не вдалося зберегти обране в хмарі',1)}}}
 
 /* ---------- оновлення броней і обраного в реальному часі ---------- */
-async function poll(){if(!base()||document.hidden||busy)return;
- try{const [r0,f0]=await Promise.all([cget('/shop/r'),cget('/shop/fv')]),r=norm({r:r0}).r,f=normFv(f0);
-  if(JSON.stringify(r)!==JSON.stringify(D.r)||JSON.stringify(f)!==JSON.stringify(D.fv)){D.r=r;D.fv=f;idbSet(D);if(!isTyping())render()}}catch(e){}}
-setInterval(poll,15000);
+async function syncR(){
+ const rv=await cget('/shop/rv');                       // кілька байтів
+ if(rv===RVER)return;
+ const [r0,f0]=await Promise.all([cget('/shop/r'),cget('/shop/fv')]),r=norm({r:r0}).r,f=normFv(f0);
+ RVER=rv;
+ if(JSON.stringify(r)!==JSON.stringify(D.r)||JSON.stringify(f)!==JSON.stringify(D.fv)){D.r=r;D.fv=f;idbSet(D);if(!isTyping())render()}else idbSet(D)}
+let lastAct=Date.now();
+async function poll(){if(!base()||document.hidden||busy||Date.now()-lastAct>180000)return;   // не опитуємо, якщо вкладка прихована або людина неактивна 3 хв
+ try{await syncR()}catch(e){}}
+['pointerdown','keydown','scroll','touchstart'].forEach(e=>addEventListener(e,()=>{lastAct=Date.now()},{passive:true,capture:true}));
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){lastAct=Date.now();poll()}});
+setInterval(poll,20000);
 
 /* ---------- адмінка ---------- */
 function setS(k,v){D.s[k]=v;mark('s')}

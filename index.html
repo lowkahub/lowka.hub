@@ -88,7 +88,7 @@ button.w small{display:block;font-size:12px;font-weight:400;color:#555}
 .dots i{width:7px;height:7px;border-radius:50%;background:#fff7;box-shadow:0 0 2px #0006}.dots i.on{background:#fff}
 .szl{color:var(--mut);font-size:12px;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pl{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap}
-.fvb{min-height:52px;min-width:60px;padding:6px 14px;border-radius:26px;border:none;background:transparent;font-size:24px;color:var(--mut)}
+.fn{font-size:.5em;line-height:1}.fvb{display:inline-flex;align-items:center;justify-content:center;gap:3px;min-height:52px;min-width:60px;padding:6px 14px;border-radius:26px;border:none;background:transparent;font-size:24px;line-height:1;color:var(--mut)}
 button.fvb.on{color:#d33}.fb.on{color:#d33;border-color:#d33}
 .fl{cursor:pointer;margin:8px 0}
 .tabs.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.tabs.g4 button{padding:8px 4px;font-size:13px}
@@ -283,7 +283,7 @@ function filtH(){
 function cardH(p,adm){const na=!avail(p),n=favN(p.id),sz=szl(p).join(' · ');
  const lab=p.sold?'<span class="sold">Продано</span>':isRes(p)?'<span class="rsv">Заброньовано</span>':'';
  const bd=isSale(p)&&!na?`<span class="bdg">−${Math.round((1-p.sp/p.pr)*100)}%</span>`:'';
- const hb=adm?(n?`<span class="fvb">♥ ${n}</span>`:''):`<button class="fvb${isFav(p.id)?' on':''}" onclick="event.stopPropagation();toggleFav('${p.id}')" aria-label="В обране">${isFav(p.id)?'♥':'♡'}${n?' '+n:''}</button>`;
+ const hb=adm?(n?`<span class="fvb">♥<span class="fn">${n}</span></span>`:''):`<button class="fvb${isFav(p.id)?' on':''}" onclick="event.stopPropagation();toggleFav('${p.id}')" aria-label="В обране">${isFav(p.id)?'♥':'♡'}${n?'<span class="fn">'+n+'</span>':''}</button>`;
  return`<div class="c${na?' na':''}" onclick="${adm?'openEd':'openProd'}('${p.id}')"><div class="im">${p.im[0]?`<img src="${p.im[0]}" alt="" loading="lazy">`:'Немає фото'}</div>${lab}${bd}<div class="t"><b>${esc(p.n)}</b>${sz?`<div class="szl">${esc(sz)}</div>`:''}<div class="pl"><span>${priceH(p)}</span>${hb}</div>${na?'':tmH(p)}</div></div>`}
 function gridH(){const l=filt();
  return l.length?`<div class="grid">${l.map(p=>cardH(p,0)).join('')}</div>`:'<p style="color:var(--mut)">За вашими фільтрами нічого не знайдено.</p>'}
@@ -324,7 +324,7 @@ function modalV(){if(!modal)return'';let h='',ti='';
   h=`<div class="tabs"><button class="${modal.reg?'':'on'}" onclick="modal.reg=0;render()">Вхід</button><button class="${modal.reg?'on':''}" onclick="modal.reg=1;render()">Створити профіль</button></div>
   ${modal.note?`<div class="warn">${esc(modal.note)}</div>`:''}
   <p class="hint" style="margin-top:0">У профілі зберігаються ваш кошик, обрані товари та шаблон даних для замовлення.</p>
-  <label>Логін</label><input id="al" autocapitalize="none" autocomplete="username" placeholder="наприклад: anna_k">
+  <label>Логін</label><input id="al" autocapitalize="none" autocomplete="username" placeholder="наприклад: liz_ka">
   <label>Пароль${modal.reg?' (мінімум 6 символів)':''}</label><input id="ap" type="password" autocomplete="${modal.reg?'new-password':'current-password'}" onkeydown="if(event.key==='Enter')doAuth()">
   <button class="p" style="width:100%" onclick="doAuth()">${modal.reg?'Створити профіль':'Увійти'}</button>
   ${modal.reg?'<p class="hint">Логін: латиниця, цифри, крапка, _ або -, від 3 до 20 символів. Не використовуйте пароль, який ви вже застосовуєте деінде.</p>':''}`}

@@ -26,11 +26,11 @@ button.d{color:#d33}
 button:disabled{opacity:.5}
 main{max-width:960px;margin:0 auto;padding:12px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.c{background:var(--card);border-radius:14px;overflow:hidden;cursor:pointer;position:relative;min-width:0}
+.c{background:var(--card);border-radius:14px;overflow:hidden;cursor:pointer;position:relative;min-width:0;display:flex;flex-direction:column}
 .c .im,.big{aspect-ratio:3/4;background:linear-gradient(135deg,var(--bd),var(--card));display:flex;align-items:center;justify-content:center;color:var(--mut);font-size:13px}
 .c.na .im{opacity:.55}
 .im img,.big img{width:100%;height:100%;object-fit:cover}
-.c .t{padding:10px}.c b{display:block;overflow-wrap:anywhere;margin-bottom:4px}
+.c .t{padding:10px;flex:1;display:flex;flex-direction:column;min-width:0}.c .bt{margin-top:auto}.c b{display:block;overflow-wrap:anywhere;margin-bottom:4px}
 .pr{display:inline-block;color:var(--fg);font-weight:700}
 .pr.sale{color:#d33}
 .old{color:var(--mut);text-decoration:line-through;font-size:.85em;margin-left:6px;font-weight:400;white-space:nowrap}
@@ -94,7 +94,7 @@ button.w small{display:block;font-size:12px;font-weight:400;color:#555}
 .dots{position:absolute;bottom:8px;left:0;right:0;display:flex;justify-content:center;gap:6px;pointer-events:none}
 .dots i{width:7px;height:7px;border-radius:50%;background:#fff7;box-shadow:0 0 2px #0006}.dots i.on{background:#fff}
 .szl{color:var(--mut);font-size:12px;margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pl{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:wrap}
+.pl{display:flex;align-items:center;justify-content:space-between;gap:4px;flex-wrap:nowrap;min-height:52px}.pl>span:first-child{min-width:0}
 .fn{font-size:.5em;line-height:1}.fvb{display:inline-flex;align-items:center;justify-content:center;gap:3px;min-height:52px;min-width:60px;padding:6px 14px;border-radius:26px;border:none;background:transparent;font-size:24px;line-height:1;color:var(--mut)}
 button.fvb.on{color:#d33}.fb.on{color:#d33;border-color:#d33}
 .fl{cursor:pointer;margin:8px 0}
@@ -312,7 +312,7 @@ function cardH(p,adm){const na=!avail(p)&&isPub(p),n=favN(p.id),sz=szl(p).join('
  const lab=adm&&!isPub(p)?'<span class="sold">Чернетка</span>':p.sold?'<span class="sold">Продано</span>':isRes(p)?'<span class="rsv">Заброньовано</span>':'';
  const bd=isSale(p)&&!na?`<span class="bdg">−${Math.round((1-p.sp/p.pr)*100)}%</span>`:'';
  const hb=adm?(n?`<span class="fvb">♥<span class="fn">${n}</span></span>`:''):`<button class="fvb${isFav(p.id)?' on':''}" onclick="event.stopPropagation();toggleFav('${p.id}')" aria-label="В обране">${isFav(p.id)?'♥':'♡'}${n?'<span class="fn">'+n+'</span>':''}</button>`;
- return`<div class="c${na?' na':''}" onclick="${adm?'openEd':'openProd'}('${p.id}')"><div class="im">${p.im[0]?`<img src="${th(p.im[0],600)}" alt="" loading="lazy">`:'Немає фото'}</div>${lab}${bd}<div class="t"><b>${esc(p.n||(adm?'Без назви':''))}</b>${sz?`<div class="szl">${esc(sz)}</div>`:''}<div class="pl"><span>${priceH(p)}</span>${hb}</div>${na?'':tmH(p)}${adm&&!isPub(p)?`<button class="p" style="width:100%;margin-top:6px" onclick="event.stopPropagation();publishP('${p.id}')">Опублікувати</button>`:''}</div></div>`}
+ return`<div class="c${na?' na':''}" onclick="${adm?'openEd':'openProd'}('${p.id}')"><div class="im">${p.im[0]?`<img src="${th(p.im[0],600)}" alt="" loading="lazy">`:'Немає фото'}</div>${lab}${bd}<div class="t"><b>${esc(p.n||(adm?'Без назви':''))}</b>${sz?`<div class="szl">${esc(sz)}</div>`:''}<div class="bt">${na?'':tmH(p)}<div class="pl"><span>${priceH(p)}</span>${hb}</div></div>${adm&&!isPub(p)?`<button class="p" style="width:100%;margin-top:6px" onclick="event.stopPropagation();publishP('${p.id}')">Опублікувати</button>`:''}</div></div>`}
 function gridH(){const l=filt();
  return l.length?`<div class="grid">${l.map(p=>cardH(p,0)).join('')}</div>`:'<p style="color:var(--mut)">За вашими фільтрами нічого не знайдено.</p>'}
 const cntT=()=>'Знайдено: '+filt().length+' з '+PL().length;
@@ -468,7 +468,7 @@ async function send(){if(busy)return;const f=modal.f||{},v=i=>(f[i]||'').trim(),
  if(!D.s.tg){alert('Продавець ще не вказав Telegram');return}
  purge();if(!cart.length){modal={t:'cart'};render();return}
  busy=true;
- const ids=[...new Set(cart.map(i=>i.id))],ts=Date.now(),buyer={tg:tgu,n:v(1),ph:v(2)};   // один ts на все замовлення — за ним групуються броні
+ const c=calc(),ids=[...new Set(cart.map(i=>i.id))],ts=Date.now(),buyer={tg:tgu,n:v(1),ph:v(2),gift:c.L.filter(l=>l.fq).map(l=>l.p.id)};   // один ts на все замовлення — за ним групуються броні
  try{
   if(base()){
    for(const id of ids){                                   // перевіряємо, що товар ще вільний
@@ -480,7 +480,7 @@ async function send(){if(busy)return;const f=modal.f||{},v=i=>(f[i]||'').trim(),
   RB[ts]=buyer;ids.forEach(id=>D.r[id]=ts);idbSet(D);
  }catch(e){status('Не вдалося забронювати в хмарі, але замовлення буде надіслано',1)}
  busy=false;
- const c=calc(),cur=D.s.cur;
+ const cur=D.s.cur;
  const txt=`🛍 Нове замовлення\n`+c.L.map((l,n)=>`${n+1}) ${l.p.n}${l.size?', розмір '+l.size:''} × ${l.q} — ${l.price*l.q} ${cur}${l.fq?' (🎁 безкоштовно × '+l.fq+')':''}`).join('\n')
   +`\nРазом: ${c.total} ${cur}\n\nІм’я: ${v(1)}\nТелефон: ${v(2)}\nTelegram: @${tgu}\nДоставка: ${f[3]||'Нова пошта'}, ${v(4)}, ${v(5)}${v(7)?'\nКоментар: '+v(7):''}\n`
   +(pre?'Оплата: повна передоплата на картку'+(D.s.fsOn?' (безкоштовна доставка)':''):'Оплата: накладений платіж (доставка за тарифами перевізника)');
@@ -565,11 +565,16 @@ function agridH(){const q=AQ.trim().toLowerCase(),l=D.p.filter(p=>!q||p.n.toLowe
 function updAGrid(){const g=document.getElementById('agl');if(g){g.innerHTML=agridH();tick()}}
 function resV(){const l=D.p.filter(isRes).sort((a,b)=>D.r[b.id]-D.r[a.id]);
  return hint('Тут товари, які покупці забронювали, оформивши замовлення. Контакти покупця приходять вам у Telegram. Якщо товар продано — натисніть «Видалити» (товар і фото буде видалено остаточно), якщо покупець передумав — «Зняти бронь».')
- +(l.length?resGroups(l).map(g=>{const ts=g.ts,b=RB[ts]||{},tgu=cleanTg(b.tg),tot=g.items.reduce((a,p)=>a+effP(p),0);
+ +(l.length?resGroups(l).map(g=>{const ts=g.ts,b=RB[ts]||{},tgu=cleanTg(b.tg),tot=g.items.reduce((a,p)=>a+effP(p),0),gi=giftIds(g,b),gn=g.items.filter(p=>gi.includes(p.id));
   return`<div class="box"><div style="margin-bottom:8px"><b>🛍 Замовлення${g.items.length>1?' · '+g.items.length+' шт.':''}</b> <small style="color:var(--mut)">· ${ago(ts)} · ${new Date(ts).toLocaleString('uk-UA')}</small><br>
-  ${tgu?`<a href="https://t.me/${esc(tgu)}" target="_blank" rel="noopener" style="color:#229ED9;font-weight:600">✈ @${esc(tgu)}</a>`:'<small style="color:var(--mut)">Telegram не вказано</small>'}${b.n?` · ${esc(b.n)}`:''}${b.ph?` · ${esc(b.ph)}`:''}<br><small style="color:var(--mut)">Сума без акцій: ${money(tot)}</small></div>
-  ${g.items.map(p=>`<div class="row" style="align-items:flex-start;cursor:pointer;margin-bottom:8px" onclick="openEd('${p.id}')"><img src="${th(p.im[0],200)}" alt="" style="flex:none;width:56px;height:72px;object-fit:cover;border-radius:8px;background:var(--bd)"><div style="flex:1"><b style="margin:0">${esc(p.n)}</b>${priceH(p)}<br><small style="color:var(--mut)">${szl(p).length?'Розміри: '+esc(szl(p).join(', ')):''}</small></div><div style="flex:none;display:flex;flex-direction:column;gap:6px"><button style="min-height:36px;padding:4px 10px" onclick="event.stopPropagation();setRes('${p.id}',false);render()">Зняти бронь</button><button class="d" style="min-height:36px;padding:4px 10px" onclick="event.stopPropagation();delP('${p.id}')">Видалити</button></div></div>`).join('')}
+  ${tgu?`<a href="https://t.me/${esc(tgu)}" target="_blank" rel="noopener" style="color:#229ED9;font-weight:600">✈ @${esc(tgu)}</a>`:'<small style="color:var(--mut)">Telegram не вказано</small>'}${b.n?` · ${esc(b.n)}`:''}${b.ph?` · ${esc(b.ph)}`:''}<br><small style="color:var(--mut)">Сума без акцій: ${money(tot)}</small>${gn.length?`<br><small style="color:#2e9e5b;font-weight:600">🎁 Подарунок: ${gn.map(p=>esc(p.n)).join(', ')}</small>`:''}</div>
+  ${g.items.map(p=>`<div class="row" style="align-items:flex-start;cursor:pointer;margin-bottom:8px" onclick="openEd('${p.id}')"><img src="${th(p.im[0],200)}" alt="" style="flex:none;width:56px;height:72px;object-fit:cover;border-radius:8px;background:var(--bd)"><div style="flex:1"><b style="margin:0">${esc(p.n)}</b>${priceH(p)}${gi.includes(p.id)?' <small style="color:#2e9e5b;font-weight:600">🎁 у подарунок</small>':''}<br><small style="color:var(--mut)">${szl(p).length?'Розміри: '+esc(szl(p).join(', ')):''}</small></div><div style="flex:none;display:flex;flex-direction:column;gap:6px"><button style="min-height:36px;padding:4px 10px" onclick="event.stopPropagation();setRes('${p.id}',false);render()">Зняти бронь</button><button class="d" style="min-height:36px;padding:4px 10px" onclick="event.stopPropagation();delP('${p.id}')">Видалити</button></div></div>`).join('')}
   ${g.items.length>1?`<button style="width:100%" onclick="unresGroup(${ts})">Зняти бронь з усього замовлення</button>`:''}</div>`}).join(''):'<div class="box">Заброньованих товарів зараз немає.</div>')}
+function giftIds(g,b){if(Array.isArray(b.gift))return b.gift;   // точні дані з моменту замовлення
+ if(!D.s.p3on||g.items.length<3)return [];                       // старі замовлення: рахуємо за поточними цінами
+ const s=g.items.slice().sort((a,b)=>effP(b)-effP(a)),r=[];
+ for(let i=2;i<s.length;i+=3)if(effP(s[i])<=D.s.p3max)r.push(s[i].id);
+ return r}
 function resGroups(l){const m={};l.forEach(p=>{(m[D.r[p.id]]=m[D.r[p.id]]||{ts:+D.r[p.id],items:[]}).items.push(p)});return Object.values(m).sort((a,b)=>b.ts-a.ts)}
 function unresGroup(ts){if(!confirm('Зняти бронь з усіх товарів цього замовлення?'))return;D.p.filter(p=>D.r[p.id]===ts).forEach(p=>setRes(p.id,false));render()}
 function applyAll(){const pct=+document.getElementById('gpct').value,e=document.getElementById('gend').value,end=e?new Date(e).getTime():0;

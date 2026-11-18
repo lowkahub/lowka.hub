@@ -308,7 +308,7 @@ function filtH(){
  <button style="width:100%" onclick="resetF()">Скинути фільтри</button></div>`}
 
 /* картка товару: однакова в магазині та в адмінці */
-function cardH(p,adm){const na=!avail(p)&&isPub(p),n=favN(p.id),sz=szl(p).join(' · ');
+function cardH(p,adm){const na=!avail(p)&&isPub(p),n=favN(p.id),sz=szl(p).join(' - ');
  const lab=adm&&!isPub(p)?'<span class="sold">Чернетка</span>':p.sold?'<span class="sold">Продано</span>':isRes(p)?'<span class="rsv">Заброньовано</span>':'';
  const bd=isSale(p)&&!na?`<span class="bdg">−${Math.round((1-p.sp/p.pr)*100)}%</span>`:'';
  const hb=adm?(n?`<span class="fvb">♥<span class="fn">${n}</span></span>`:''):`<button class="fvb${isFav(p.id)?' on':''}" onclick="event.stopPropagation();toggleFav('${p.id}')" aria-label="В обране">${isFav(p.id)?'♥':'♡'}${n?'<span class="fn">'+n+'</span>':''}</button>`;
@@ -333,7 +333,7 @@ function calc(){const L=[],U=[];
 function lineH(l){return`<div class="box row"><div style="flex:3"><b>${esc(l.p.n)}</b><br>${l.size?`<small>Розмір ${esc(l.size)}</small><br>`:''}${priceH(l.p)}${l.fq?`<br><small style="color:#2e9e5b">🎁 безкоштовно × ${l.fq}</small>`:''}</div><div class="row" style="flex:2"><button onclick="rm(${l.n})" aria-label="Видалити з кошика">🗑 Видалити</button></div></div>`}
 const fv=i=>esc(modal.f&&modal.f[i]||'');
 function fs(i,v){(modal.f=modal.f||{})[i]=v}
-function openProd(id){const p=prod(id),b=modal&&modal.t==='me'?modal:null;modal={t:'prod',id,size:p.sz.length===1?p.sz[0]:null,k:0,back:b};render()}
+function openProd(id){const p=prod(id),b=modal&&modal.t==='me'?modal:null;modal={t:'prod',id,size:null,k:0,back:b};render()}
 function closeM(){modal=(modal&&modal.back)||null;render()}
 const TPK=['n','ph','dl','ci','br','tg'];                  // шаблон профілю → поля оформлення 1..6 (6 = Telegram)
 let RB={};                                                 // дані покупців за часом замовлення: {ts:{tg,n,ph}}
@@ -427,7 +427,7 @@ function modalV(){if(!modal)return'';let h='',ti='';
   h=`${gal}<h2 style="margin:10px 0 6px">${esc(p.n)}</h2><div style="font-size:18px">${priceH(p)}</div>${tmH(p)}
   <div class="row" style="margin:10px 0"><button class="fb${isFav(p.id)?' on':''}" style="flex:none" onclick="toggleFav('${p.id}')">${isFav(p.id)?'♥ В обраному':'♡ В обране'}</button><span style="color:var(--mut);font-size:13px">Додали в обране: ${n}</span></div>
   ${meta?`<p style="color:var(--mut);font-size:13px;margin:8px 0 0">${esc(meta)}</p>`:''}<p>${esc(p.d).replace(/\n/g,'<br>')}</p>
-  ${S.length>1?`<label>Розмір</label><div class="sz">${S.map(s=>`<button class="${modal.size===s?'on':''}" data-v="${esc(s)}" onclick="pickSize(this.dataset.v)">${esc(s)}</button>`).join('')}</div>`:S.length===1?`<p><label>Розмір:</label> <b>${esc(S[0])}</b></p>`:''}
+  ${S.length?`<p><label>${S.length>1?'Розміри':'Розмір'}:</label> <b>${esc(S.join(' - '))}</b></p>`:''}
   ${p.sold?'<button disabled style="width:100%">Продано</button>':isRes(p)?'<button disabled style="width:100%">Заброньовано</button>':`${orderBtn('addCart(true)')}<button class="g" style="width:100%;margin-top:8px" onclick="addCart(false)">Додати в кошик</button>`}
   ${tgBtn(p.id)}`}
  if(modal.t==='cart'){ti='Кошик';const c=calc();
@@ -450,14 +450,11 @@ function modalV(){if(!modal)return'';let h='',ti='';
  if(modal.t==='done'){ti='Майже готово ✅';h=`<p>Відкрився Telegram із готовим повідомленням. Натисніть «Надіслати» в чаті з продавцем. Товари заброньовано за вами. Якщо чат не відкрився, скопіюйте замовлення й надішліть вручну:</p><textarea rows="8" readonly>${esc(modal.txt)}</textarea><button onclick="copyTxt()">Скопіювати</button>`}
  if(modal.t==='ed'){const p=prod(modal.id);if(!p||!admin){modal=null;return''}ti=p.n||'Без назви';h=edV(p)}
  return`<div class="ov" onclick="if(event.target===this)closeM()"><div class="md" data-t="${modal.t}"><div class="mh"><button class="cl" onclick="closeM()" aria-label="Закрити">✕</button><b>${esc(ti)}</b></div><div class="mb">${h}</div></div></div>`}
-function pickSize(v){modal.size=v;document.querySelectorAll('.sz button').forEach(b=>b.classList.toggle('on',b.dataset.v===v))}
 function copy(t){try{navigator.clipboard.writeText(t).then(()=>status('Скопійовано'),()=>status('Не вдалося скопіювати',1))}catch(e){status('Не вдалося скопіювати',1)}}
 function copyCard(){copy((D.s.card||'').replace(/\s/g,''))}
 function copyTxt(){copy(modal.txt)}
 function addCart(go){const p=prod(modal.id);if(!avail(p)){status('Цей товар уже недоступний',1);return}
- const sz=p.sz.length===1?p.sz[0]:modal.size;           // якщо розмір один — обирати не потрібно
- if(p.sz.length>1&&!sz){status('Оберіть розмір',1);return}
- const f=cart.find(i=>i.id===p.id&&i.size===(sz||null));if(!f)cart.push({id:p.id,size:sz||null,q:1});
+   const f=cart.find(i=>i.id===p.id);if(!f)cart.push({id:p.id,size:null,q:1});
  saveU();
  if(go)openCo();else{modal=null;status('Додано в кошик ✓');render()}}
 function rm(n){cart.splice(n,1);saveU();render()}
@@ -498,7 +495,7 @@ function saveU(now){if(!me)return;clearTimeout(uT);
  uT=setTimeout(async()=>{if(!me)return;const rec={h:me.h,t:me.t||0,cart:cart.map(i=>({id:i.id,size:i.size||'',q:i.q})),tpl:me.tpl||{}};
   LS.set('u_'+me.id,JSON.stringify(rec));
   if(base()){try{await cput('/users/'+uk(me.id),rec)}catch(e){status('Не вдалося зберегти профіль у хмарі',1)}}},now?0:600)}
-function mergeCart(list){list.forEach(i=>{if(!i||!i.id)return;const sz=i.size||null,f=cart.find(c=>c.id===i.id&&c.size===sz);if(!f)cart.push({id:i.id,size:sz,q:1})})}
+function mergeCart(list){list.forEach(i=>{if(!i||!i.id)return;const f=cart.find(c=>c.id===i.id);if(!f)cart.push({id:i.id,size:null,q:1})})}
 async function restoreMe(){const id=LS.get('me'),h=LS.get('meh');if(!id||!h)return;
  const set=rec=>{me={id,h,t:rec.t||0,tpl:Object.assign({},rec.tpl||{})};mergeCart(arr(rec.cart))};
  try{const rec=await uLoad(id);if(rec&&rec.h===h)set(rec);else{LS.del('me');LS.del('meh')}}

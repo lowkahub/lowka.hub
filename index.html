@@ -330,7 +330,7 @@ function calc(){const L=[],U=[];
   for(let i=2;i<s.length;i+=3)if(s[i].price<=D.s.p3max){s[i].l.fq++;gift+=s[i].price}}
  const sub=L.reduce((a,l)=>a+l.price*l.q,0);
  return{L,sub,gift,total:sub-gift,n:U.length}}
-function lineH(l){return`<div class="box row"><div style="flex:3"><b>${esc(l.p.n)}</b><br>${l.size?`<small>Розмір ${esc(l.size)}</small><br>`:''}${priceH(l.p)}${l.fq?`<br><small style="color:#2e9e5b">🎁 безкоштовно × ${l.fq}</small>`:''}</div><div class="row" style="flex:2"><button onclick="qty(${l.n},-1)">−</button><span style="text-align:center">${l.q}</span><button onclick="qty(${l.n},1)">+</button></div></div>`}
+function lineH(l){return`<div class="box row"><div style="flex:3"><b>${esc(l.p.n)}</b><br>${l.size?`<small>Розмір ${esc(l.size)}</small><br>`:''}${priceH(l.p)}${l.fq?`<br><small style="color:#2e9e5b">🎁 безкоштовно × ${l.fq}</small>`:''}</div><div class="row" style="flex:2"><button onclick="rm(${l.n})" aria-label="Видалити з кошика">🗑 Видалити</button></div></div>`}
 const fv=i=>esc(modal.f&&modal.f[i]||'');
 function fs(i,v){(modal.f=modal.f||{})[i]=v}
 function openProd(id){const p=prod(id),b=modal&&modal.t==='me'?modal:null;modal={t:'prod',id,size:p.sz.length===1?p.sz[0]:null,k:0,back:b};render()}
@@ -457,10 +457,10 @@ function copyTxt(){copy(modal.txt)}
 function addCart(go){const p=prod(modal.id);if(!avail(p)){status('Цей товар уже недоступний',1);return}
  const sz=p.sz.length===1?p.sz[0]:modal.size;           // якщо розмір один — обирати не потрібно
  if(p.sz.length>1&&!sz){status('Оберіть розмір',1);return}
- const f=cart.find(i=>i.id===p.id&&i.size===(sz||null));f?f.q++:cart.push({id:p.id,size:sz||null,q:1});
+ const f=cart.find(i=>i.id===p.id&&i.size===(sz||null));if(!f)cart.push({id:p.id,size:sz||null,q:1});
  saveU();
  if(go)openCo();else{modal=null;status('Додано в кошик ✓');render()}}
-function qty(n,d){cart[n].q+=d;if(cart[n].q<1)cart.splice(n,1);saveU();render()}
+function rm(n){cart.splice(n,1);saveU();render()}
 async function send(){if(busy)return;const f=modal.f||{},v=i=>(f[i]||'').trim(),pre=modal.pay!=='cod';
  if(!v(1)||!v(2)||!v(4)||!v(5)){alert('Заповніть ім’я, телефон, місто та відділення');return}
  const tgu=cleanTg(f[6]);
@@ -498,7 +498,7 @@ function saveU(now){if(!me)return;clearTimeout(uT);
  uT=setTimeout(async()=>{if(!me)return;const rec={h:me.h,t:me.t||0,cart:cart.map(i=>({id:i.id,size:i.size||'',q:i.q})),tpl:me.tpl||{}};
   LS.set('u_'+me.id,JSON.stringify(rec));
   if(base()){try{await cput('/users/'+uk(me.id),rec)}catch(e){status('Не вдалося зберегти профіль у хмарі',1)}}},now?0:600)}
-function mergeCart(list){list.forEach(i=>{if(!i||!i.id)return;const sz=i.size||null,q=+i.q||1,f=cart.find(c=>c.id===i.id&&c.size===sz);f?f.q=Math.max(f.q,q):cart.push({id:i.id,size:sz,q})})}
+function mergeCart(list){list.forEach(i=>{if(!i||!i.id)return;const sz=i.size||null,f=cart.find(c=>c.id===i.id&&c.size===sz);if(!f)cart.push({id:i.id,size:sz,q:1})})}
 async function restoreMe(){const id=LS.get('me'),h=LS.get('meh');if(!id||!h)return;
  const set=rec=>{me={id,h,t:rec.t||0,tpl:Object.assign({},rec.tpl||{})};mergeCart(arr(rec.cart))};
  try{const rec=await uLoad(id);if(rec&&rec.h===h)set(rec);else{LS.del('me');LS.del('meh')}}
